@@ -1,0 +1,17 @@
+name: my_mono_repo
+publish_to: "none"
+environment:
+  sdk: ^3.9.0
+
+workspace:
+  - apps/job_application_tracker
+  - packages/job_application_tracker_core
+
+dev_dependencies:
+  melos: ^7.3.0
+  build_runner: ^2.10.2
+
+melos:
+  scripts:
+    build_runner:
+      run: melos exec -- dart run build_runner build --delete-conflicting-outputs
