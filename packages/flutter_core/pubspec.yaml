@@ -1,17 +1,19 @@
-name: job_application_tracker_core
-description: "A new Flutter package project."
+name: flutter_core
+description: "Flutter Core"
 version: 0.0.1
-homepage:
+publish_to: none
+
+resolution: workspace
 
 environment:
   sdk: ^3.9.0
   flutter: ">=1.17.0"
 
-resolution: workspace
-
 dependencies:
+  dio: ^5.9.0
   flutter:
     sdk: flutter
+  fpdart: ^1.2.0
 
 dev_dependencies:
   flutter_test:
