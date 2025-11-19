@@ -5,11 +5,13 @@ environment:
 
 workspace:
   - apps/job_application_tracker
-  - packages/job_application_tracker_core
+  - packages/flutter_core
+  - packages/firebase_authentication
 
 dev_dependencies:
-  melos: ^7.3.0
   build_runner: ^2.10.2
+  melos: ^7.3.0
+  very_good_analysis: ^10.0.0
 
 melos:
   scripts:

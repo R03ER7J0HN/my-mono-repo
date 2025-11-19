@@ -19,7 +19,7 @@ void main() {
   const tPassword = 'password123';
   const tUid = 'testUid';
 
-  final tUserEntity = UserEntity(uid: tUid, email: tEmail);
+  const tUserEntity = UserEntity(uid: tUid, email: tEmail);
   final tFirebaseAuthException = FirebaseAuthException(
     code: 'test-error',
     message: 'An error occurred',

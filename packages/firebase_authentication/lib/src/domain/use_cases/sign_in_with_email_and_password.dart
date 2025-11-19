@@ -8,9 +8,9 @@ class SignInWithEmailAndPassword
           FutureResult<UserEntity>,
           SignInWithEmailAndPasswordParams
         > {
-  final FirebaseAuthRepository _firebaseAuthRepository;
-
   const SignInWithEmailAndPassword(this._firebaseAuthRepository);
+
+  final FirebaseAuthRepository _firebaseAuthRepository;
 
   @override
   FutureResult<UserEntity> call({
@@ -22,11 +22,10 @@ class SignInWithEmailAndPassword
 }
 
 class SignInWithEmailAndPasswordParams {
-  final String email;
-  final String password;
-
   const SignInWithEmailAndPasswordParams({
     required this.email,
     required this.password,
   });
+  final String email;
+  final String password;
 }

@@ -9,11 +9,10 @@ class FirebaseAuthentication {
   const FirebaseAuthentication._();
 
   static void initialize() {
-    final di = GetIt.instance;
-
-    di.registerLazySingleton<FirebaseAuthRepository>(
-      () => FirebaseAuthRepositoryImpl(FirebaseAuth.instance),
-    );
+    final di = GetIt.instance
+      ..registerLazySingleton<FirebaseAuthRepository>(
+        () => FirebaseAuthRepositoryImpl(FirebaseAuth.instance),
+      );
 
     // Use cases
     di.registerLazySingleton<SignUpWithEmailAndPassword>(

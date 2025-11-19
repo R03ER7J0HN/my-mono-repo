@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_authentication/src/common/firebase_exception_handler.dart';
 import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
 import 'package:firebase_authentication/src/domain/repositories/firebase_auth_repository.dart';
-import 'package:firebase_authentication/src/common/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 class FirebaseAuthRepositoryImpl
     with FirebaseExceptionHandler
     implements FirebaseAuthRepository {
-  final FirebaseAuth _firebaseAuth;
-
   const FirebaseAuthRepositoryImpl(this._firebaseAuth);
+
+  final FirebaseAuth _firebaseAuth;
 
   @override
   FutureResult<void> deleteAccount() async {
