@@ -7,13 +7,12 @@ export 'package:fpdart/fpdart.dart';
 typedef FutureResult<T> = Future<Result<T>>;
 
 class Result<T> {
-  final Either<Failure, T> value;
-
   factory Result.failure(Failure failure) => Result._(Left(failure));
-
   factory Result.success(T data) => Result._(Right(data));
 
   const Result._(this.value);
+
+  final Either<Failure, T> value;
 
   bool get isFailure => value.isLeft();
   bool get isSuccess => value.isRight();

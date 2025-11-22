@@ -24,52 +24,16 @@ mixin ApiResponseHandler {
     } on FormatException catch (e) {
       return Result.failure(FormatFailure(e.message));
     } on Exception catch (_) {
-      return Result.failure(GenericFailure(_genericErrorMessage));
+      return Result.failure(const GenericFailure(_genericErrorMessage));
     }
   }
 
-  // Failure _mapAuthException(AuthorizationException exception) {
-  //   const requiredSegmentCount = 3;
-  //   final segments = exception.description?.split('\n') ?? [];
-
-  //   if (segments.length < requiredSegmentCount) {
-  //     return OAuthFailure.rawMessage(exception.error);
-  //   }
-
-  //   final errorCode = StringHelper.beforeDelimiter(
-  //     segments[0],
-  //     Delimiter.colon,
-  //   );
-  //   final errorMessage = StringHelper.afterDelimiter(
-  //     segments[0],
-  //     Delimiter.colon,
-  //   );
-  //   final correlationId = StringHelper.afterDelimiter(
-  //     segments[1],
-  //     Delimiter.colon,
-  //   );
-  //   final timestamp = StringHelper.afterDelimiter(segments[2], Delimiter.colon);
-  //   final timestampDateTime = DateTime.tryParse(timestamp);
-
-  //   // This is MJ's preference for the error message.
-  //   final customMessage = errorCode == 'AADB2C90225'
-  //       ? 'The username or password provided in the request is invalid.'
-  //       : null;
-
-  //   return OAuthFailure(
-  //     customMessage ?? errorMessage,
-  //     errorCode,
-  //     correlationId,
-  //     timestamp: timestampDateTime,
-  //   );
-  // }
-
   Failure _mapDioException(DioException error) {
     return switch (error.type) {
-      DioExceptionType.badResponse => DioFailure(
-        error.response?.data?['detail'] ??
-            'Received invalid status code: ${error.response?.statusCode}',
-      ),
+      DioExceptionType.badResponse => DioFailure(switch (error.response?.data) {
+        {'detail': final String detail} => detail,
+        _ => 'Received invalid status code: ${error.response?.statusCode}',
+      }),
       DioExceptionType.cancel => const CancellationFailure(
         'Request was canceled.',
       ),
