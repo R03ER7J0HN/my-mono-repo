@@ -3,7 +3,7 @@ import 'package:firebase_authentication/src/domain/repositories/firebase_auth_re
 import 'package:flutter_core/flutter_core.dart';
 
 class SignInWithEmailAndPassword
-    extends
+    with
         BaseUseCase<
           FutureResult<UserEntity>,
           SignInWithEmailAndPasswordParams
