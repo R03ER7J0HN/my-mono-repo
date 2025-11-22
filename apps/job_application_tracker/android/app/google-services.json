@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "625002689131",
+    "project_id": "job-application-tracker-516b1",
+    "storage_bucket": "job-application-tracker-516b1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625002689131:android:38ba11d5f8f0b677b0772e",
+        "android_client_info": {
+          "package_name": "com.example.job_application_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625002689131-qeu8kd34gvsk37sgsu7ruvnhlf9vvv6k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf8rsJ0cq9r7hCWolJSd14gzNb1nkmSXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625002689131-qeu8kd34gvsk37sgsu7ruvnhlf9vvv6k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "625002689131-4qc8o3lj2sh3ko5afp5rsj3jupe4usa1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jobApplicationTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,6 +28,10 @@ mixin FirebaseExceptionHandler {
 
   Failure _mapFirebaseAuthException(FirebaseAuthException exception) {
     switch (exception.code) {
+      case 'invalid-credential':
+        return const FirebaseFailure(
+          'Either the email address or password is invalid.',
+        );
       case 'invalid-email':
         return const FirebaseFailure('The email address is badly formatted.');
       case 'user-disabled':

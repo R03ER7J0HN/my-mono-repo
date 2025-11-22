@@ -8,15 +8,26 @@ export 'src/domain/domain.dart';
 class FirebaseAuthentication {
   const FirebaseAuthentication._();
 
-  static void initialize() {
-    final di = GetIt.instance
+  static void initialize(GetIt di) {
+    di
       ..registerLazySingleton<FirebaseAuthRepository>(
         () => FirebaseAuthRepositoryImpl(FirebaseAuth.instance),
+      )
+      // Use cases
+      ..registerLazySingleton<DeleteAccount>(
+        () => DeleteAccount(di<FirebaseAuthRepository>()),
+      )
+      ..registerLazySingleton<GetSignedInUser>(
+        () => GetSignedInUser(di<FirebaseAuthRepository>()),
+      )
+      ..registerLazySingleton<LogOut>(
+        () => LogOut(di<FirebaseAuthRepository>()),
+      )
+      ..registerLazySingleton<SignInWithEmailAndPassword>(
+        () => SignInWithEmailAndPassword(di<FirebaseAuthRepository>()),
+      )
+      ..registerLazySingleton<SignUpWithEmailAndPassword>(
+        () => SignUpWithEmailAndPassword(di<FirebaseAuthRepository>()),
       );
-
-    // Use cases
-    di.registerLazySingleton<SignUpWithEmailAndPassword>(
-      () => SignUpWithEmailAndPassword(di<FirebaseAuthRepository>()),
-    );
   }
 }

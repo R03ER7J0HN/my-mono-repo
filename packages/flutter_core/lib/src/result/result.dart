@@ -17,8 +17,13 @@ class Result<T> {
   bool get isFailure => value.isLeft();
   bool get isSuccess => value.isRight();
 
+  R fold<R>({
+    required R Function(Failure failure) onFailure,
+    required R Function(T data) onSuccess,
+  }) => value.fold(onFailure, onSuccess);
   Failure getFailure() =>
       value.getLeft().getOrElse(() => throw Exception('No Failure present'));
+
   T getSuccess() =>
       value.getRight().getOrElse(() => throw Exception('No Success present'));
 }
