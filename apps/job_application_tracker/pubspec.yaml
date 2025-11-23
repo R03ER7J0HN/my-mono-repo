@@ -13,6 +13,7 @@ dependencies:
   firebase_authentication:
     path: ../../packages/firebase_authentication
   firebase_core: ^4.2.1
+  firebase_messaging: ^16.0.4
   firebase_ui_auth: ^3.0.1
   flutter:
     sdk: flutter
@@ -27,7 +28,7 @@ dependencies:
   intl: any
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   freezed: ^3.2.3
