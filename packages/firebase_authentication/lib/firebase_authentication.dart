@@ -9,25 +9,8 @@ class FirebaseAuthentication {
   const FirebaseAuthentication._();
 
   static void initialize(GetIt di) {
-    di
-      ..registerLazySingleton<FirebaseAuthRepository>(
-        () => FirebaseAuthRepositoryImpl(FirebaseAuth.instance),
-      )
-      // Use cases
-      ..registerLazySingleton<DeleteAccount>(
-        () => DeleteAccount(di<FirebaseAuthRepository>()),
-      )
-      ..registerLazySingleton<GetSignedInUser>(
-        () => GetSignedInUser(di<FirebaseAuthRepository>()),
-      )
-      ..registerLazySingleton<LogOut>(
-        () => LogOut(di<FirebaseAuthRepository>()),
-      )
-      ..registerLazySingleton<SignInWithEmailAndPassword>(
-        () => SignInWithEmailAndPassword(di<FirebaseAuthRepository>()),
-      )
-      ..registerLazySingleton<SignUpWithEmailAndPassword>(
-        () => SignUpWithEmailAndPassword(di<FirebaseAuthRepository>()),
-      );
+    di.registerLazySingleton<FirebaseAuthRepository>(
+      () => FirebaseAuthRepositoryImpl(FirebaseAuth.instance),
+    );
   }
 }

@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_application_tracker/application/cubit/cubit.dart';
-import 'package:job_application_tracker/features/auth/sign_in/cubit/cubit.dart';
+import 'package:job_application_tracker/features/auth/sign_up/cubit/cubit.dart';
 import 'package:job_application_tracker/router/app_navigator.dart';
 import 'package:job_application_tracker/widgets/shimmer_box.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignInCubit(
+      create: (_) => SignUpCubit(
         GetIt.I<FirebaseAuthRepository>(),
       ),
-      child: BlocListener<SignInCubit, SignInState>(
+      child: BlocListener<SignUpCubit, SignUpState>(
         listener: (context, state) {
           state.whenOrNull(
             failure: (message) => ScaffoldMessenger.of(context).showSnackBar(
@@ -31,37 +31,40 @@ class SignInScreen extends StatelessWidget {
             success: () => context.read<AppCubit>().login(),
           );
         },
-        child: const _SignInView(),
+        child: const _SignUpView(),
       ),
     );
   }
 }
 
-class _SignInView extends StatefulWidget {
-  const _SignInView();
+class _SignUpView extends StatefulWidget {
+  const _SignUpView();
 
   @override
-  State<_SignInView> createState() => _SignInViewState();
+  State<_SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignInViewState extends State<_SignInView> {
+class _SignUpViewState extends State<_SignUpView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       unawaited(
-        context.read<SignInCubit>().signInWithEmailAndPassword(
+        context.read<SignUpCubit>().signUpWithEmailAndPassword(
           _emailController.text.trim(),
           _passwordController.text,
         ),
@@ -102,7 +105,7 @@ class _SignInViewState extends State<_SignInView> {
                     ),
                   ),
                   child: Icon(
-                    Icons.work_outline_rounded,
+                    Icons.person_add_alt_1_rounded,
                     size: 48,
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -110,7 +113,7 @@ class _SignInViewState extends State<_SignInView> {
                 const SizedBox(height: 24),
 
                 Text(
-                  'Welcome Back',
+                  'Create Account',
                   style: theme.textTheme.displaySmall?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
@@ -118,7 +121,7 @@ class _SignInViewState extends State<_SignInView> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue tracking your job applications',
+                  'Sign up to start tracking your jobs',
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
                   ),
@@ -173,22 +176,46 @@ class _SignInViewState extends State<_SignInView> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your password';
                               }
+                              if (value.length < 6) {
+                                return 'Password must be at least 6 characters';
+                              }
                               return null;
                             },
                           ),
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                AppNavigator.goToForgotPassword(context);
-                              },
-                              child: const Text('Forgot Password?'),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            obscureText: !_isConfirmPasswordVisible,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isConfirmPasswordVisible
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isConfirmPasswordVisible =
+                                        !_isConfirmPasswordVisible;
+                                  });
+                                },
+                              ),
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm your password';
+                              }
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 24),
 
-                          BlocBuilder<SignInCubit, SignInState>(
+                          BlocBuilder<SignUpCubit, SignUpState>(
                             builder: (context, state) {
                               final isLoading = state.maybeWhen(
                                 loading: () => true,
@@ -198,7 +225,7 @@ class _SignInViewState extends State<_SignInView> {
                               final buttonWidget = ElevatedButton(
                                 onPressed: isLoading ? null : _submit,
                                 child: const Text(
-                                  'Sign In',
+                                  'Sign Up',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -222,7 +249,7 @@ class _SignInViewState extends State<_SignInView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account?",
+                      'Already have an account?',
                       style: TextStyle(
                         color: theme.colorScheme.onPrimary.withValues(
                           alpha: 0.7,
@@ -231,10 +258,10 @@ class _SignInViewState extends State<_SignInView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        AppNavigator.goToSignUp(context);
+                        AppNavigator.goToSignIn(context);
                       },
                       child: Text(
-                        'Sign Up',
+                        'Sign In',
                         style: TextStyle(
                           color: theme.colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,

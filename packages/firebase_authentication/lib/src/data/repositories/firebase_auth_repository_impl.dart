@@ -87,4 +87,12 @@ class FirebaseAuthRepositoryImpl
       },
     );
   }
+
+  @override
+  FutureResult<void> sendPasswordResetEmail({required String email}) {
+    return handleFirebaseException(
+      _firebaseAuth.sendPasswordResetEmail(email: email),
+      onSuccess: (response) => response,
+    );
+  }
 }

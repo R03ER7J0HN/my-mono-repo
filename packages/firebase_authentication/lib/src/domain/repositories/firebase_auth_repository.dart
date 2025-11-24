@@ -17,4 +17,6 @@ abstract class FirebaseAuthRepository {
     required String email,
     required String password,
   });
+
+  FutureResult<void> sendPasswordResetEmail({required String email});
 }

@@ -10,7 +10,7 @@ workspace:
   - packages/firebase_notification
 
 dev_dependencies:
-  build_runner: ^2.10.2
+  build_runner: ^2.10.4
   melos: ^7.3.0
   very_good_analysis: ^10.0.0
 

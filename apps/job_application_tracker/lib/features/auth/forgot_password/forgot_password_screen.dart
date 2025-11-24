@@ -4,21 +4,20 @@ import 'package:firebase_authentication/firebase_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:get_it/get_it.dart';
-import 'package:job_application_tracker/application/cubit/cubit.dart';
-import 'package:job_application_tracker/features/auth/sign_in/cubit/cubit.dart';
+import 'package:job_application_tracker/features/auth/forgot_password/cubit/cubit.dart';
 import 'package:job_application_tracker/router/app_navigator.dart';
 import 'package:job_application_tracker/widgets/shimmer_box.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignInCubit(
+      create: (_) => ForgotPasswordCubit(
         GetIt.I<FirebaseAuthRepository>(),
       ),
-      child: BlocListener<SignInCubit, SignInState>(
+      child: BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
         listener: (context, state) {
           state.whenOrNull(
             failure: (message) => ScaffoldMessenger.of(context).showSnackBar(
@@ -28,42 +27,46 @@ class SignInScreen extends StatelessWidget {
                 behavior: SnackBarBehavior.floating,
               ),
             ),
-            success: () => context.read<AppCubit>().login(),
+            success: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Password reset email sent!'),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              AppNavigator.goToSignIn(context);
+            },
           );
         },
-        child: const _SignInView(),
+        child: const _ForgotPasswordView(),
       ),
     );
   }
 }
 
-class _SignInView extends StatefulWidget {
-  const _SignInView();
+class _ForgotPasswordView extends StatefulWidget {
+  const _ForgotPasswordView();
 
   @override
-  State<_SignInView> createState() => _SignInViewState();
+  State<_ForgotPasswordView> createState() => _ForgotPasswordViewState();
 }
 
-class _SignInViewState extends State<_SignInView> {
+class _ForgotPasswordViewState extends State<_ForgotPasswordView> {
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       unawaited(
-        context.read<SignInCubit>().signInWithEmailAndPassword(
+        context.read<ForgotPasswordCubit>().sendPasswordResetEmail(
           _emailController.text.trim(),
-          _passwordController.text,
         ),
       );
     }
@@ -74,6 +77,12 @@ class _SignInViewState extends State<_SignInView> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: BackButton(color: theme.colorScheme.onPrimary),
+      ),
+      extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -102,7 +111,7 @@ class _SignInViewState extends State<_SignInView> {
                     ),
                   ),
                   child: Icon(
-                    Icons.work_outline_rounded,
+                    Icons.lock_reset_rounded,
                     size: 48,
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -110,7 +119,7 @@ class _SignInViewState extends State<_SignInView> {
                 const SizedBox(height: 24),
 
                 Text(
-                  'Welcome Back',
+                  'Forgot Password',
                   style: theme.textTheme.displaySmall?.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
@@ -118,7 +127,8 @@ class _SignInViewState extends State<_SignInView> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue tracking your job applications',
+                  'Enter your email to reset your password',
+                  textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
                   ),
@@ -149,46 +159,9 @@ class _SignInViewState extends State<_SignInView> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: !_isPasswordVisible,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                AppNavigator.goToForgotPassword(context);
-                              },
-                              child: const Text('Forgot Password?'),
-                            ),
-                          ),
                           const SizedBox(height: 24),
 
-                          BlocBuilder<SignInCubit, SignInState>(
+                          BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                             builder: (context, state) {
                               final isLoading = state.maybeWhen(
                                 loading: () => true,
@@ -198,7 +171,7 @@ class _SignInViewState extends State<_SignInView> {
                               final buttonWidget = ElevatedButton(
                                 onPressed: isLoading ? null : _submit,
                                 child: const Text(
-                                  'Sign In',
+                                  'Reset Password',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -215,33 +188,6 @@ class _SignInViewState extends State<_SignInView> {
                       ),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: TextStyle(
-                        color: theme.colorScheme.onPrimary.withValues(
-                          alpha: 0.7,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        AppNavigator.goToSignUp(context);
-                      },
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: theme.colorScheme.onPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

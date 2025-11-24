@@ -2,7 +2,6 @@ import 'package:flutter_core/src/failure/failure.dart';
 import 'package:fpdart/fpdart.dart';
 
 export 'package:flutter_core/src/failure/failure.dart';
-export 'package:fpdart/fpdart.dart';
 
 typedef FutureResult<T> = Future<Result<T>>;
 

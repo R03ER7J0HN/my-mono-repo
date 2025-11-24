@@ -5,8 +5,8 @@ part 'app_state.freezed.dart';
 
 enum AppStatus {
   initial,
-  loggedIn,
-  loggedOut,
+  authenticated,
+  unauthenticated,
 }
 
 @freezed

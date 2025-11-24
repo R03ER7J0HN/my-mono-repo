@@ -23,7 +23,7 @@ class AppCubit extends Cubit<AppState>
   Future<void> checkAuthStatus() async {
     // Simulate some delay for checking auth status
     Future.delayed(const Duration(seconds: 2), () {
-      safeEmit(const AppState(status: AppStatus.loggedOut));
+      safeEmit(const AppState(status: AppStatus.unauthenticated));
     });
   }
 
@@ -40,9 +40,9 @@ class AppCubit extends Cubit<AppState>
     notifyListeners();
   }
 
-  void login() => safeEmit(const AppState(status: AppStatus.loggedIn));
+  void login() => safeEmit(const AppState(status: AppStatus.authenticated));
 
-  void logout() => safeEmit(const AppState(status: AppStatus.loggedOut));
+  void logout() => safeEmit(const AppState(status: AppStatus.unauthenticated));
 
   Future<void> _initNotifications() async {
     await _localNotificationService.initialize();
@@ -85,7 +85,6 @@ class AppCubit extends Cubit<AppState>
           notification,
         ) {
           // Handle notification opened app (e.g. navigation)
-          // For now we just update the state, but typically this would trigger a side effect
           safeEmit(state.copyWith(lastNotification: notification));
         });
   }
