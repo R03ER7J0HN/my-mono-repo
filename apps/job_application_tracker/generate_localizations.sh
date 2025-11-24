@@ -8,7 +8,7 @@ RED='\033[31m'
 RESET='\033[0m'
 
 # List of features
-FEATURES=("auth" "home")
+FEATURES=("auth" "home" "splash")
 
 # Loop through each feature
 for FEATURE in "${FEATURES[@]}"

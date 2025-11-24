@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:job_application_tracker/features/splash/l10n/gen/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -24,9 +25,12 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF485563),
+              Color(0xFF29323C),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
         child: Center(
@@ -40,34 +44,42 @@ class _SplashScreenState extends State<SplashScreen>
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white30, width: 2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
+                        color: Colors.black.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
                   child: const Center(
                     child: Icon(
-                      Icons.flutter_dash,
+                      Icons.work_outline_rounded,
                       size: 64,
-                      color: Color(0xFF2575FC),
+                      color: Colors.white,
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
                 // App name
                 Text(
-                  'My Awesome App',
-                  style: theme.textTheme.headlineMedium?.copyWith(
+                  SplashLocalizations.of(context).title,
+                  style: theme.textTheme.displaySmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.5,
+                    shadows: [
+                      const Shadow(
+                        color: Colors.black45,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
                 ),
 
@@ -75,19 +87,20 @@ class _SplashScreenState extends State<SplashScreen>
 
                 // Tagline
                 Text(
-                  'Track your tasks seamlessly',
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  SplashLocalizations.of(context).subtitle,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.white70,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w300,
+                    letterSpacing: 0.5,
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 60),
 
                 // Loading indicator
                 const CircularProgressIndicator(
                   color: Colors.white,
-                  strokeWidth: 3,
+                  strokeWidth: 2,
                 ),
               ],
             ),
@@ -104,10 +117,17 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
+  /// Initializes the state of the [SplashScreen].
+  ///
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// Creates an [AnimationController] and a [CurvedAnimation] to control
+  /// the animation of the splash screen.
+  ///
+  /// Calls [_controller.forward()] to start the animation.
   void initState() {
     super.initState();
 
-    // Scale animation for logo
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
