@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_notification/src/notification.dart';
-import 'package:firebase_notification/src/notification_service_impl.dart';
+import 'package:firebase_notification/src/firebase_notification_repository.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -14,11 +14,11 @@ import 'notification_service_impl_test.mocks.dart';
 @GenerateMocks([FirebaseMessaging])
 void main() {
   late MockFirebaseMessaging mockFirebaseMessaging;
-  late NotificationServiceImpl notificationService;
+  late FirebaseNotificationRepository notificationService;
 
   setUp(() {
     mockFirebaseMessaging = MockFirebaseMessaging();
-    notificationService = NotificationServiceImpl(mockFirebaseMessaging);
+    notificationService = FirebaseNotificationRepository(mockFirebaseMessaging);
   });
 
   tearDown(() {

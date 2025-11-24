@@ -1,41 +1,101 @@
 # Firebase Notification Package
 
-This package provides a clean, reusable, and testable way to handle Firebase Cloud Messaging in a Flutter application. It is designed as a self-contained feature package that can be easily integrated into any app.
+A pragmatic, feature-sliced package for handling **Remote Push Notifications** using Firebase Cloud Messaging (FCM).
 
 ## Architecture: Pragmatic Clean Architecture
 
-This package follows a pragmatic and lean interpretation of Clean Architecture, optimized for creating scalable feature packages. It maintains a strong separation of concerns without the heavy boilerplate of a more traditional, "heavy" Clean Architecture that includes explicit use case classes for every repository method.
+This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
 
-We can call this a **Feature-Sliced Architecture with a Domain-Data Split**.
+### Key Concepts
 
-### Comparison to "Traditional" Clean Architecture
+1.  **Remote vs. Local Separation:**
 
-| Layer           | Traditional Clean Architecture                                                                | This Package's Architecture (Pragmatic)                                                                        |
-| :-------------- | :-------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| **Domain**      | Contains entities, abstract repositories, and **use case classes** (e.g., `GetTokenUseCase`). | Contains entities (`Notification`) and abstract repositories (`NotificationService`). **No use case classes.** |
-| **Data**        | Contains repository implementations and data source definitions.                              | Contains the repository implementation (`FCMService`).                                                         |
-| **Interaction** | The Presentation Layer (UI/Cubit) calls a specific `UseCase` class.                           | The Presentation Layer calls methods directly on the abstract `Repository` (`NotificationService`).            |
+    - This package is responsible **ONLY** for the **Remote** data source (fetching data from Firebase).
+    - It is **NOT** responsible for displaying local notifications (banners, sounds, vibrations). That is the responsibility of the consuming application (Presentation Layer).
 
-### Why This Approach?
+2.  **Repository Pattern:**
+    - We use `RemoteNotificationRepository` as the abstraction. This treats notifications as a data source that provides a stream of events, rather than a "service" that performs actions.
 
-For features that don't have complex business logic orchestrating multiple repositories, use case classes can be redundant boilerplate (e.g., a class that does nothing but call a single repository method).
+### Layering
 
-This pragmatic approach simplifies the structure by allowing the Presentation Layer to depend directly on the repository's contract. It remains highly testable and maintainable because the dependency is still on an **abstraction**, not a concrete implementation.
+| Layer      | Component                        | Role                                                                                                                     |
+| :--------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **Domain** | `RemoteNotificationRepository`   | **(Abstract Interface)** The contract that the app depends on. Defines _what_ we can do (get token, listen to messages). |
+| **Domain** | `Notification`                   | **(Entity)** A pure, immutable Dart object representing a notification. Decoupled from Firebase's `RemoteMessage`.       |
+| **Data**   | `FirebaseNotificationRepository` | **(Implementation)** The concrete class that talks to `firebase_messaging`. It maps raw data to Domain Entities.         |
 
-### Layers in This Package
+## Installation
 
-1.  **Public API (`lib/firebase_notification.dart`)**
+1.  Add the dependency to your `pubspec.yaml`.
+2.  Ensure you have configured Firebase for your Android and iOS apps.
 
-    - This is the "facade" and the only file your application should ever import.
-    - It exports the abstract `NotificationService` and the `Notification` model.
-    - It provides a single `initialize()` method to handle dependency injection.
+## Usage
 
-2.  **Abstraction Layer (The "Domain")**
+### 1. Initialization
 
-    - `lib/src/notification_service.dart`: The abstract contract that defines _what_ the service can do.
-    - `lib/src/models/notification.dart`: The pure data model (entity) that the rest of your app will interact with.
+Initialize the package in your `main.dart`. This registers the repository with `GetIt`.
 
-3.  **Implementation Layer (The "Data")**
-    - `lib/src/fcm_service.dart`: The concrete implementation of `NotificationService`. This is the only file that knows about the `firebase_messaging` SDK. It handles the "how."
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-This structure provides the best of both worlds: the high cohesion of a feature-sliced package and the low coupling and testability of a layered architecture, all while keeping the code lean and easy to navigate.
+  // Initialize this package
+  FirebaseNotification.initialize(GetIt.instance);
+
+  runApp(const MyApp());
+}
+```
+
+### 2. Consuming in the App Layer (e.g., Cubit)
+
+Inject the `RemoteNotificationRepository` into your Cubit. Do not depend on the concrete implementation.
+
+```dart
+class AppCubit extends Cubit<AppState> {
+  final RemoteNotificationRepository _remoteRepository;
+  final LocalNotificationService _localService; // Your app's local handler
+
+  AppCubit({
+    required RemoteNotificationRepository remoteRepository,
+    required LocalNotificationService localService,
+  })  : _remoteRepository = remoteRepository,
+        _localService = localService,
+        super(AppState.initial()) {
+    _initNotifications();
+  }
+
+  void _initNotifications() {
+    // Listen to remote data
+    _remoteRepository.onMessage.listen((notification) {
+      // Decide how to present it locally
+      if (notification.title != null) {
+        _localService.showNotification(
+          title: notification.title!,
+          body: notification.body!
+        );
+      }
+    });
+  }
+}
+```
+
+## Testing
+
+This architecture makes testing easy. You can mock `RemoteNotificationRepository` to simulate incoming notifications without needing a real Firebase connection.
+
+```dart
+// Mocking in tests
+class MockRemoteNotificationRepository extends Mock implements RemoteNotificationRepository {}
+
+void main() {
+  test('AppCubit handles incoming notification', () {
+    final mockRepo = MockRemoteNotificationRepository();
+    when(mockRepo.onMessage).thenAnswer((_) => Stream.value(
+      Notification(title: 'Test', body: 'Body')
+    ));
+
+    // ... assert that AppCubit reacts correctly
+  });
+}
+```
