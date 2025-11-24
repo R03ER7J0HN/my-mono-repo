@@ -11,6 +11,7 @@ import 'package:job_application_tracker/features/auth/l10n/gen/app_localizations
 import 'package:job_application_tracker/features/home/l10n/gen/app_localizations.dart';
 import 'package:job_application_tracker/features/splash/l10n/gen/app_localizations.dart';
 import 'package:job_application_tracker/router/app_router.dart';
+import 'package:job_application_tracker/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
+    theme: AppTheme.lightTheme,
     localizationsDelegates: const [
       AuthLocalizations.delegate,
       HomeLocalizations.delegate,

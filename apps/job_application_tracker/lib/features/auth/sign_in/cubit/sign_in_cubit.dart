@@ -3,23 +3,19 @@ import 'package:flutter_core/flutter_core.dart';
 import 'package:job_application_tracker/features/auth/sign_in/cubit/sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> with SafeEmitMixin<SignInState> {
-  SignInCubit({required SignInWithEmailAndPassword signInWithEmailAndPassword})
-    : _signInWithEmailAndPassword = signInWithEmailAndPassword,
-      super(const SignInState.initial());
+  SignInCubit(this._authRepository) : super(const SignInState.initial());
 
-  final SignInWithEmailAndPassword _signInWithEmailAndPassword;
-
-  void signInSuccess() => safeEmit(const SignInState.success());
+  final FirebaseAuthRepository _authRepository;
 
   Future<void> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    final result = await _signInWithEmailAndPassword(
-      params: SignInWithEmailAndPasswordParams(
-        email: email,
-        password: password,
-      ),
+    safeEmit(const SignInState.loading());
+
+    final result = await _authRepository.signInWithEmailAndPassword(
+      email: email,
+      password: password,
     );
 
     result.fold(
@@ -29,7 +25,7 @@ class SignInCubit extends Cubit<SignInState> with SafeEmitMixin<SignInState> {
         );
         safeEmit(const SignInState.initial());
       },
-      onSuccess: (data) => signInSuccess(),
+      onSuccess: (data) => safeEmit(const SignInState.success()),
     );
   }
 }
