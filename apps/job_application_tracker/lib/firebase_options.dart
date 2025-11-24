@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBf8rsJ0cq9r7hCWolJSd14gzNb1nkmSXQ',
-    appId: '1:625002689131:android:38ba11d5f8f0b677b0772e',
+    appId: '1:625002689131:android:f934711ed39251e4b0772e',
     messagingSenderId: '625002689131',
     projectId: 'job-application-tracker-516b1',
     storageBucket: 'job-application-tracker-516b1.firebasestorage.app',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCc8H3y-bAsiAXOTy-RDDSYEMt84YnPbf0',
-    appId: '1:625002689131:ios:5acd102adef14795b0772e',
+    appId: '1:625002689131:ios:cbb7094eb8cf8fa2b0772e',
     messagingSenderId: '625002689131',
     projectId: 'job-application-tracker-516b1',
     storageBucket: 'job-application-tracker-516b1.firebasestorage.app',
-    iosClientId: '625002689131-4qc8o3lj2sh3ko5afp5rsj3jupe4usa1.apps.googleusercontent.com',
-    iosBundleId: 'com.example.jobApplicationTracker',
+    iosBundleId: 'com.my.jobApplicationTracker',
   );
+
 }

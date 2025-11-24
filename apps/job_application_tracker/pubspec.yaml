@@ -14,12 +14,15 @@ dependencies:
     path: ../../packages/firebase_authentication
   firebase_core: ^4.2.1
   firebase_messaging: ^16.0.4
+  firebase_notification:
+    path: ../../packages/firebase_notification
   firebase_ui_auth: ^3.0.1
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_core:
     path: ../../packages/flutter_core
+  flutter_local_notifications: ^19.5.0
   flutter_localizations:
     sdk: flutter
   freezed_annotation: ^3.1.0

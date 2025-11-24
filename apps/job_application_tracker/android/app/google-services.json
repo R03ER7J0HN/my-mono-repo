@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:625002689131:android:38ba11d5f8f0b677b0772e",
+        "mobilesdk_app_id": "1:625002689131:android:f934711ed39251e4b0772e",
         "android_client_info": {
-          "package_name": "com.example.job_application_tracker"
+          "package_name": "com.my.job_application_tracker"
         }
       },
       "oauth_client": [
