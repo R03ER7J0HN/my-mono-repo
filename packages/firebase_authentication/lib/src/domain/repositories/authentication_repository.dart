@@ -1,7 +1,7 @@
 import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
 import 'package:flutter_core/flutter_core.dart';
 
-abstract class FirebaseAuthRepository {
+abstract class AuthenticationRepository {
   FutureResult<void> deleteAccount();
 
   FutureResult<UserEntity?> getSignedInUser();

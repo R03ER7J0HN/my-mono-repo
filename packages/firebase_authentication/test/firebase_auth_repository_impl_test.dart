@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_authentication/firebase_authentication.dart';
+import 'package:firebase_authentication/src/data/datasources/local_data_source.dart';
+import 'package:firebase_authentication/src/data/models/user_model.dart';
 import 'package:firebase_authentication/src/data/repositories/firebase_auth_repository_impl.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,9 +10,10 @@ import 'package:mockito/mockito.dart';
 
 import 'firebase_auth_repository_impl_test.mocks.dart';
 
-@GenerateMocks([FirebaseAuth, UserCredential, User])
+@GenerateMocks([FirebaseAuth, UserCredential, User, LocalDataSource])
 void main() {
   late MockFirebaseAuth mockFirebaseAuth;
+  late MockLocalDataSource mockLocalDataSource;
   late FirebaseAuthRepositoryImpl repository;
   late MockUser mockUser;
   late MockUserCredential mockUserCredential;
@@ -20,6 +23,7 @@ void main() {
   const tUid = 'testUid';
 
   const tUserEntity = UserEntity(uid: tUid, email: tEmail);
+  const tUserModel = UserModel(uid: tUid, email: tEmail);
   final tFirebaseAuthException = FirebaseAuthException(
     code: 'test-error',
     message: 'An error occurred',
@@ -27,9 +31,13 @@ void main() {
 
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
+    mockLocalDataSource = MockLocalDataSource();
     mockUser = MockUser();
     mockUserCredential = MockUserCredential();
-    repository = FirebaseAuthRepositoryImpl(mockFirebaseAuth);
+    repository = FirebaseAuthRepositoryImpl(
+      mockFirebaseAuth,
+      mockLocalDataSource,
+    );
   });
 
   // -----------------------------
@@ -78,7 +86,9 @@ void main() {
           password: tPassword,
         ),
       );
+      verify(mockLocalDataSource.cacheUser(tUserModel));
       verifyNoMoreInteractions(mockFirebaseAuth);
+      verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('returns FirebaseFailure when returned user is null', () async {
@@ -108,6 +118,7 @@ void main() {
           password: tPassword,
         ),
       );
+      verifyZeroInteractions(mockLocalDataSource);
       verifyNoMoreInteractions(mockFirebaseAuth);
     });
 
@@ -166,6 +177,8 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       expect(result.getSuccess(), equals(tUserEntity));
+      verify(mockLocalDataSource.cacheUser(tUserModel));
+      verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('returns FirebaseFailure when user is null after sign in', () async {
@@ -235,6 +248,7 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       expect(result.getSuccess(), equals(tUserEntity));
+      verify(mockLocalDataSource.cacheUser(tUserModel));
     });
 
     test('returns null when no user is signed in', () async {
@@ -247,7 +261,44 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       expect(result.getSuccess(), isNull);
+      verify(mockLocalDataSource.clearCache());
     });
+
+    test('returns cached user when FirebaseAuth throws exception', () async {
+      // Arrange
+      when(mockFirebaseAuth.currentUser).thenAnswer((_) => throw Exception());
+      when(
+        mockLocalDataSource.getLastSignedInUser(),
+      ).thenAnswer((_) async => tUserModel);
+
+      // Act
+      final result = await repository.getSignedInUser();
+
+      // Assert
+      expect(result.isSuccess, true);
+      expect(result.getSuccess(), equals(tUserModel));
+      verify(mockLocalDataSource.getLastSignedInUser());
+    });
+
+    test(
+      'returns failure when FirebaseAuth throws exception and no cached user',
+      () async {
+        // Arrange
+        when(mockFirebaseAuth.currentUser).thenThrow(Exception('Error'));
+        when(
+          mockLocalDataSource.getLastSignedInUser(),
+        ).thenAnswer((_) async => null);
+
+        // Act
+        try {
+          await repository.getSignedInUser();
+        } on Exception catch (e) {
+          // Assert
+          expect(e, isA<FirebaseFailure>());
+        }
+        verify(mockLocalDataSource.getLastSignedInUser());
+      },
+    );
   });
 
   group('logOut', () {
@@ -261,6 +312,7 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       verify(mockFirebaseAuth.signOut());
+      verify(mockLocalDataSource.clearCache());
       verifyNoMoreInteractions(mockFirebaseAuth);
     });
 
@@ -296,6 +348,7 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       verify(mockUser.delete());
+      verify(mockLocalDataSource.clearCache());
     });
 
     test('returns FirebaseFailure when no user logged in', () async {

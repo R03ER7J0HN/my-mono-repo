@@ -8,6 +8,9 @@ import 'dart:async' as _i5;
 import 'package:firebase_auth/firebase_auth.dart' as _i4;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     as _i3;
+import 'package:firebase_authentication/src/data/datasources/local_data_source.dart'
+    as _i7;
+import 'package:firebase_authentication/src/data/models/user_model.dart' as _i8;
 import 'package:firebase_core/firebase_core.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
@@ -856,4 +859,39 @@ class MockUser extends _i1.Mock implements _i4.User {
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+}
+
+/// A class which mocks [LocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLocalDataSource extends _i1.Mock implements _i7.LocalDataSource {
+  MockLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<void> cacheUser(_i8.UserModel? user) =>
+      (super.noSuchMethod(
+            Invocation.method(#cacheUser, [user]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> clearCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearCache, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<_i8.UserModel?> getLastSignedInUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getLastSignedInUser, []),
+            returnValue: _i5.Future<_i8.UserModel?>.value(),
+          )
+          as _i5.Future<_i8.UserModel?>);
 }

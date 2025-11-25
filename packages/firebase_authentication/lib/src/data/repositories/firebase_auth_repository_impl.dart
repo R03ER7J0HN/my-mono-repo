@@ -1,15 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/src/common/firebase_exception_handler.dart';
+import 'package:firebase_authentication/src/data/datasources/local_data_source.dart';
+import 'package:firebase_authentication/src/data/models/user_model.dart';
 import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
-import 'package:firebase_authentication/src/domain/repositories/firebase_auth_repository.dart';
+import 'package:firebase_authentication/src/domain/repositories/authentication_repository.dart';
+import 'package:firebase_authentication/src/utils/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 class FirebaseAuthRepositoryImpl
     with FirebaseExceptionHandler
-    implements FirebaseAuthRepository {
-  const FirebaseAuthRepositoryImpl(this._firebaseAuth);
+    implements AuthenticationRepository {
+  const FirebaseAuthRepositoryImpl(
+    this._firebaseAuth,
+    this._localDataSource,
+  );
 
   final FirebaseAuth _firebaseAuth;
+  final LocalDataSource _localDataSource;
 
   @override
   FutureResult<void> deleteAccount() async {
@@ -21,7 +27,7 @@ class FirebaseAuthRepositoryImpl
 
     return handleFirebaseException(
       currentUser.delete(),
-      onSuccess: (response) => null,
+      onSuccess: (response) => _localDataSource.clearCache(),
     );
   }
 
@@ -31,12 +37,19 @@ class FirebaseAuthRepositoryImpl
       final user = _firebaseAuth.currentUser;
 
       if (user != null) {
-        return Result.success(UserEntity(uid: user.uid, email: user.email));
+        final userEntity = _mapFirebaseUserToUserEntity(user);
+        await _localDataSource.cacheUser(UserModel.fromEntity(userEntity));
+        return Result.success(userEntity);
       }
 
+      await _localDataSource.clearCache();
       return Result.success(null);
-    } catch (e) {
-      throw FirebaseFailure(e.toString());
+    } on Exception catch (e) {
+      final cachedUser = await _localDataSource.getLastSignedInUser();
+      if (cachedUser != null) {
+        return Result.success(cachedUser);
+      }
+      return Result.failure(FirebaseFailure(e.toString()));
     }
   }
 
@@ -44,7 +57,10 @@ class FirebaseAuthRepositoryImpl
   FutureResult<void> logOut() {
     return handleFirebaseException(
       _firebaseAuth.signOut(),
-      onSuccess: (response) => response,
+      onSuccess: (response) async {
+        await _localDataSource.clearCache();
+        return response;
+      },
     );
   }
 
@@ -58,15 +74,22 @@ class FirebaseAuthRepositoryImpl
         email: email,
         password: password,
       ),
-      onSuccess: (userCredential) {
+      onSuccess: (userCredential) async {
         final user = userCredential.user;
         if (user == null) {
           throw FirebaseFailure.userNotFound();
         }
-        return UserEntity(uid: user.uid, email: user.email);
+        final userEntity = _mapFirebaseUserToUserEntity(user);
+        await _localDataSource.cacheUser(UserModel.fromEntity(userEntity));
+        return userEntity;
       },
     );
   }
+
+  UserEntity _mapFirebaseUserToUserEntity(User user) => UserEntity(
+    uid: user.uid,
+    email: user.email,
+  );
 
   @override
   FutureResult<UserEntity> signUpWithEmailAndPassword({
@@ -78,12 +101,14 @@ class FirebaseAuthRepositoryImpl
         email: email,
         password: password,
       ),
-      onSuccess: (userCredential) {
+      onSuccess: (userCredential) async {
         final user = userCredential.user;
         if (user == null) {
           throw FirebaseFailure.userNotFound();
         }
-        return UserEntity(uid: user.uid, email: user.email);
+        final userEntity = _mapFirebaseUserToUserEntity(user);
+        await _localDataSource.cacheUser(UserModel.fromEntity(userEntity));
+        return userEntity;
       },
     );
   }
