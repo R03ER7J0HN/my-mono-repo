@@ -5,7 +5,7 @@ import 'package:flutter_core/flutter_core.dart';
 ///
 /// This abstraction allows the application to depend on a stable interface
 /// while hiding the implementation details of the underlying messaging provider.
-abstract class RemoteNotificationRepository {
+abstract class NotificationRepository {
   /// Requests user permission for notifications (required for iOS and web).
   ///
   /// Returns a [Result.success] if permission is granted or already granted,

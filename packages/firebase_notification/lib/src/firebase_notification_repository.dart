@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_notification/src/notification.dart';
-import 'package:firebase_notification/src/remote_notification_repository.dart';
+import 'package:firebase_notification/src/notification_repository.dart';
 import 'package:firebase_notification/src/utils/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
 
-/// A concrete implementation of [RemoteNotificationRepository] using Firebase Cloud Messaging.
+/// A concrete implementation of [NotificationRepository] using Firebase Cloud Messaging.
 /// This class is internal to the package.
 class FirebaseNotificationRepository
     with FirebaseExceptionHandler
-    implements RemoteNotificationRepository {
+    implements NotificationRepository {
   final FirebaseMessaging _firebaseMessaging;
 
   final StreamController<Notification> _onMessageController =
