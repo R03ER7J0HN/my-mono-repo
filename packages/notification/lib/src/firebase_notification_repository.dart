@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_notification/src/notification.dart';
-import 'package:firebase_notification/src/notification_repository.dart';
-import 'package:firebase_notification/src/utils/firebase_exception_handler.dart';
+import 'notification.dart';
+import 'notification_repository.dart';
+import 'utils/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 /// A concrete implementation of [NotificationRepository] using Firebase Cloud Messaging.

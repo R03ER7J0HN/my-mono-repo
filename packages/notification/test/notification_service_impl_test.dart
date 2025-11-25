@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_notification/src/notification.dart';
-import 'package:firebase_notification/src/firebase_notification_repository.dart';
+import '../lib/src/notification.dart';
+import '../lib/src/firebase_notification_repository.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

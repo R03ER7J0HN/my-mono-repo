@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_notification/src/firebase_notification_repository.dart';
-import 'package:firebase_notification/src/notification_repository.dart';
+import 'src/firebase_notification_repository.dart';
+import 'src/notification_repository.dart';
 import 'package:get_it/get_it.dart';
 
 export 'src/notification.dart';

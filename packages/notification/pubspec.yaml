@@ -1,4 +1,4 @@
-name: firebase_notification
+name: notification
 description: A reusable package for handling Firebase Cloud Messaging.
 version: 1.0.0
 publish_to: "none"

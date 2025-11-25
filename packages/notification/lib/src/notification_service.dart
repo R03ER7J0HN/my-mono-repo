@@ -1,11 +1,11 @@
-import 'package:firebase_notification/src/notification.dart';
+import 'notification.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 /// Defines the contract for a notification service.
 ///
 /// This abstraction allows the application to depend on a stable interface
 /// while hiding the implementation details of the underlying messaging provider.
-abstract class NotificationRepository {
+abstract class RemoteNotificationService {
   /// Requests user permission for notifications (required for iOS and web).
   ///
   /// Returns a [Result.success] if permission is granted or already granted,
