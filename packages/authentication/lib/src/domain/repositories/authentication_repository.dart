@@ -1,4 +1,4 @@
-import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
+import 'package:authentication/src/domain/entities/user_entity.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 abstract class AuthenticationRepository {

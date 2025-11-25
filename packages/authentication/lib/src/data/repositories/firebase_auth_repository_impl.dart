@@ -1,9 +1,9 @@
+import 'package:authentication/src/data/datasources/local_data_source.dart';
+import 'package:authentication/src/data/models/user_model.dart';
+import 'package:authentication/src/domain/entities/user_entity.dart';
+import 'package:authentication/src/domain/repositories/authentication_repository.dart';
+import 'package:authentication/src/utils/firebase_exception_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/src/data/datasources/local_data_source.dart';
-import 'package:firebase_authentication/src/data/models/user_model.dart';
-import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
-import 'package:firebase_authentication/src/domain/repositories/authentication_repository.dart';
-import 'package:firebase_authentication/src/utils/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 class FirebaseAuthRepositoryImpl

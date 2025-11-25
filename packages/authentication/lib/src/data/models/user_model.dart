@@ -1,4 +1,4 @@
-import 'package:firebase_authentication/src/domain/entities/user_entity.dart';
+import 'package:authentication/src/domain/entities/user_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';

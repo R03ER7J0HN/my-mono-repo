@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:firebase_authentication/src/data/datasources/local_data_source.dart';
-import 'package:firebase_authentication/src/data/models/user_model.dart';
+import 'package:authentication/src/data/datasources/local_data_source.dart';
+import 'package:authentication/src/data/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

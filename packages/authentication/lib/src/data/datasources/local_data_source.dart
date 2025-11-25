@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_authentication/src/data/models/user_model.dart';
+import 'package:authentication/src/data/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const String _cachedUserKey = 'CACHED_USER_KEY';

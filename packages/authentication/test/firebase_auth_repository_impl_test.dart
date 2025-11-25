@@ -1,8 +1,8 @@
+import 'package:authentication/firebase_authentication.dart';
+import 'package:authentication/src/data/datasources/local_data_source.dart';
+import 'package:authentication/src/data/models/user_model.dart';
+import 'package:authentication/src/data/repositories/firebase_auth_repository_impl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_authentication/firebase_authentication.dart';
-import 'package:firebase_authentication/src/data/datasources/local_data_source.dart';
-import 'package:firebase_authentication/src/data/models/user_model.dart';
-import 'package:firebase_authentication/src/data/repositories/firebase_auth_repository_impl.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
