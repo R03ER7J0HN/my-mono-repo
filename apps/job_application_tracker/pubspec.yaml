@@ -9,13 +9,11 @@ environment:
 resolution: workspace
 
 dependencies:
+  authentication:
+    path: ../../packages/authentication
   firebase_auth: ^6.1.2
-  firebase_authentication:
-    path: ../../packages/firebase_authentication
   firebase_core: ^4.2.1
   firebase_messaging: ^16.0.4
-  firebase_notification:
-    path: ../../packages/firebase_notification
   firebase_ui_auth: ^3.0.1
   flutter:
     sdk: flutter
@@ -29,6 +27,8 @@ dependencies:
   get_it: ^9.1.0
   go_router: ^17.0.0
   intl: any
+  notification:
+    path: ../../packages/notification
   shimmer: ^3.0.0
 
 dev_dependencies:

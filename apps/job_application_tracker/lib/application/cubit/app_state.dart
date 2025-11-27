@@ -1,5 +1,5 @@
-import 'package:firebase_notification/firebase_notification.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:notification/firebase_notification.dart';
 
 part 'app_state.freezed.dart';
 

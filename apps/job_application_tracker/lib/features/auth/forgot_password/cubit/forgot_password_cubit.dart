@@ -1,4 +1,4 @@
-import 'package:firebase_authentication/firebase_authentication.dart';
+import 'package:authentication/firebase_authentication.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:job_application_tracker/features/auth/forgot_password/cubit/forgot_password_state.dart';
 
@@ -7,7 +7,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState>
   ForgotPasswordCubit(this._authRepository)
     : super(const ForgotPasswordState.initial());
 
-  final FirebaseAuthRepository _authRepository;
+  final AuthenticationRepository _authRepository;
 
   Future<void> sendPasswordResetEmail(String email) async {
     safeEmit(const ForgotPasswordState.loading());

@@ -1,11 +1,11 @@
-import 'package:firebase_authentication/firebase_authentication.dart';
+import 'package:authentication/firebase_authentication.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:job_application_tracker/features/auth/sign_in/cubit/sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> with SafeEmitMixin<SignInState> {
   SignInCubit(this._authRepository) : super(const SignInState.initial());
 
-  final FirebaseAuthRepository _authRepository;
+  final AuthenticationRepository _authRepository;
 
   Future<void> signInWithEmailAndPassword(
     String email,

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_authentication/firebase_authentication.dart';
+import 'package:authentication/firebase_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:get_it/get_it.dart';
@@ -16,7 +16,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => SignUpCubit(
-        GetIt.I<FirebaseAuthRepository>(),
+        GetIt.I<AuthenticationRepository>(),
       ),
       child: BlocListener<SignUpCubit, SignUpState>(
         listener: (context, state) {

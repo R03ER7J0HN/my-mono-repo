@@ -25,8 +25,9 @@ void main() async {
   runApp(
     BlocProvider(
       create: (_) => AppCubit(
-        GetIt.I<RemoteNotificationRepository>(),
+        GetIt.I<NotificationRepository>(),
         GetIt.I<LocalNotificationService>(),
+        GetIt.I<AuthenticationRepository>(),
       ),
       child: const MainApp(),
     ),
