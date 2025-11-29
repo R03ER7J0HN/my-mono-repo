@@ -22,8 +22,8 @@ class AppCubit extends Cubit<AppState>
   final LocalNotificationService _localNotificationService;
   final AuthenticationRepository _authenticationRepository;
 
-  StreamSubscription<Notification>? _onMessageSubscription;
-  StreamSubscription<Notification>? _onMessageOpenedAppSubscription;
+  StreamSubscription<NotificationEntity>? _onMessageSubscription;
+  StreamSubscription<NotificationEntity>? _onMessageOpenedAppSubscription;
 
   Future<void> checkAuthStatus() async {
     // TODO(authentication): Put actual authentication check logic here

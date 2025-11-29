@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-/// A representation of a push notification, decoupled from any specific provider.
-class Notification extends Equatable {
-  /// Creates an immutable [Notification] instance.
-  const Notification({this.title, this.body, this.data});
+/// A representation of a push notification,
+/// decoupled from any specific provider.
+class NotificationEntity extends Equatable {
+  /// Creates an immutable [NotificationEntity] instance.
+  const NotificationEntity({this.title, this.body, this.data});
 
   /// The title of the notification, if available.
   final String? title;

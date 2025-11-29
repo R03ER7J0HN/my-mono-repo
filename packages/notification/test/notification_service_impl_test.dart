@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../lib/src/notification.dart';
-import '../lib/src/firebase_notification_repository.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:notification/src/firebase_notification_repository.dart';
+import 'package:notification/src/notification_entity.dart';
 
 import 'notification_service_impl_test.mocks.dart';
 
@@ -21,8 +21,8 @@ void main() {
     notificationService = FirebaseNotificationRepository(mockFirebaseMessaging);
   });
 
-  tearDown(() {
-    notificationService.dispose();
+  tearDown(() async {
+    await notificationService.dispose();
   });
 
   group('getToken', () {
@@ -129,12 +129,12 @@ void main() {
           onMessageStream: onMessageController.stream,
         );
 
-        final remoteMessage = RemoteMessage(
-          notification: const RemoteNotification(title: 'Title', body: 'Body'),
+        const remoteMessage = RemoteMessage(
+          notification: RemoteNotification(title: 'Title', body: 'Body'),
           data: {'id': '123'},
         );
 
-        const expectedNotification = Notification(
+        const expectedNotification = NotificationEntity(
           title: 'Title',
           body: 'Body',
           data: {'id': '123'},
@@ -142,7 +142,7 @@ void main() {
 
         // Act
         onMessageController.add(remoteMessage);
-        onMessageController.close();
+        unawaited(onMessageController.close());
 
         // Assert
         expect(notificationService.onMessage, emits(expectedNotification));
@@ -152,23 +152,24 @@ void main() {
 
   group('onMessageOpenedApp Stream', () {
     test(
-      'should emit a mapped Notification when a message opened event is received',
-      () {
+      '''
+should emit a mapped Notification when a message opened event is received''',
+      () async {
         // Arrange
         final onMessageOpenedAppController = StreamController<RemoteMessage>();
         notificationService.initialize(
           onMessageOpenedAppStream: onMessageOpenedAppController.stream,
         );
 
-        final remoteMessage = RemoteMessage(
-          notification: const RemoteNotification(
+        const remoteMessage = RemoteMessage(
+          notification: RemoteNotification(
             title: 'Opened App Title',
             body: 'Opened App Body',
           ),
           data: {'screen': 'details', 'id': '456'},
         );
 
-        const expectedNotification = Notification(
+        const expectedNotification = NotificationEntity(
           title: 'Opened App Title',
           body: 'Opened App Body',
           data: {'screen': 'details', 'id': '456'},
@@ -182,7 +183,7 @@ void main() {
 
         // Act
         onMessageOpenedAppController.add(remoteMessage);
-        onMessageOpenedAppController.close();
+        await onMessageOpenedAppController.close();
       },
     );
   });

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppState {
 
- AppStatus get status; Notification? get lastNotification;
+ AppStatus get status; NotificationEntity? get lastNotification;
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $AppStateCopyWith<$Res>  {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) _then) = _$AppStateCopyWithImpl;
 @useResult
 $Res call({
- AppStatus status, Notification? lastNotification
+ AppStatus status, NotificationEntity? lastNotification
 });
 
 
@@ -66,7 +66,7 @@ class _$AppStateCopyWithImpl<$Res>
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AppStatus,lastNotification: freezed == lastNotification ? _self.lastNotification : lastNotification // ignore: cast_nullable_to_non_nullable
-as Notification?,
+as NotificationEntity?,
   ));
 }
 
@@ -148,7 +148,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AppStatus status,  Notification? lastNotification)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AppStatus status,  NotificationEntity? lastNotification)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
 return $default(_that.status,_that.lastNotification);case _:
@@ -169,7 +169,7 @@ return $default(_that.status,_that.lastNotification);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AppStatus status,  Notification? lastNotification)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AppStatus status,  NotificationEntity? lastNotification)  $default,) {final _that = this;
 switch (_that) {
 case _AppState():
 return $default(_that.status,_that.lastNotification);}
@@ -186,7 +186,7 @@ return $default(_that.status,_that.lastNotification);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AppStatus status,  Notification? lastNotification)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AppStatus status,  NotificationEntity? lastNotification)?  $default,) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
 return $default(_that.status,_that.lastNotification);case _:
@@ -205,7 +205,7 @@ class _AppState implements AppState {
   
 
 @override final  AppStatus status;
-@override final  Notification? lastNotification;
+@override final  NotificationEntity? lastNotification;
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
@@ -237,7 +237,7 @@ abstract mixin class _$AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res>
   factory _$AppStateCopyWith(_AppState value, $Res Function(_AppState) _then) = __$AppStateCopyWithImpl;
 @override @useResult
 $Res call({
- AppStatus status, Notification? lastNotification
+ AppStatus status, NotificationEntity? lastNotification
 });
 
 
@@ -258,7 +258,7 @@ class __$AppStateCopyWithImpl<$Res>
   return _then(_AppState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AppStatus,lastNotification: freezed == lastNotification ? _self.lastNotification : lastNotification // ignore: cast_nullable_to_non_nullable
-as Notification?,
+as NotificationEntity?,
   ));
 }
 

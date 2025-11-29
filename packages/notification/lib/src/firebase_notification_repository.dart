@@ -1,37 +1,37 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'notification.dart';
-import 'notification_repository.dart';
-import 'utils/firebase_exception_handler.dart';
 import 'package:flutter_core/flutter_core.dart';
+import 'package:notification/src/firebase_exception_handler.dart';
+import 'package:notification/src/notification_entity.dart';
+import 'package:notification/src/notification_repository.dart';
 
-/// A concrete implementation of [NotificationRepository] using Firebase Cloud Messaging.
+/// A concrete implementation of [NotificationRepository]
+/// using Firebase Cloud Messaging.
 /// This class is internal to the package.
 class FirebaseNotificationRepository
     with FirebaseExceptionHandler
     implements NotificationRepository {
-  final FirebaseMessaging _firebaseMessaging;
-
-  final StreamController<Notification> _onMessageController =
-      StreamController.broadcast();
-  final StreamController<Notification> _onMessageOpenedAppController =
-      StreamController.broadcast();
-
   /// Creates an instance of [FirebaseNotificationRepository].
   FirebaseNotificationRepository(this._firebaseMessaging);
+  final FirebaseMessaging _firebaseMessaging;
+
+  final StreamController<NotificationEntity> _onMessageController =
+      StreamController.broadcast();
+  final StreamController<NotificationEntity> _onMessageOpenedAppController =
+      StreamController.broadcast();
 
   @override
-  Stream<Notification> get onMessage => _onMessageController.stream;
+  Stream<NotificationEntity> get onMessage => _onMessageController.stream;
 
   @override
-  Stream<Notification> get onMessageOpenedApp =>
+  Stream<NotificationEntity> get onMessageOpenedApp =>
       _onMessageOpenedAppController.stream;
 
   /// Closes the stream controllers when the service is disposed.
-  void dispose() {
-    _onMessageController.close();
-    _onMessageOpenedAppController.close();
+  Future<void> dispose() async {
+    await _onMessageController.close();
+    await _onMessageOpenedAppController.close();
   }
 
   @override
@@ -71,8 +71,8 @@ class FirebaseNotificationRepository
   }
 
   /// Correctly maps a RemoteMessage to the internal Notification model.
-  Notification _mapToNotification(RemoteMessage message) {
-    return Notification(
+  NotificationEntity _mapToNotification(RemoteMessage message) {
+    return NotificationEntity(
       title: message.notification?.title,
       body: message.notification?.body,
       data: message.data,

@@ -13,6 +13,6 @@ enum AppStatus {
 sealed class AppState with _$AppState {
   const factory AppState({
     required AppStatus status,
-    Notification? lastNotification,
+    NotificationEntity? lastNotification,
   }) = _AppState;
 }
