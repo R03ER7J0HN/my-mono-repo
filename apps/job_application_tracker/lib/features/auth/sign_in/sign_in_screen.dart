@@ -15,9 +15,7 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignInCubit(
-        GetIt.I<AuthenticationRepository>(),
-      ),
+      create: (_) => SignInCubit(GetIt.I<AuthenticationRepository>()),
       child: BlocListener<SignInCubit, SignInState>(
         listener: (context, state) {
           state.whenOrNull(
@@ -77,10 +75,7 @@ class _SignInViewState extends State<_SignInView> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              theme.colorScheme.secondary,
-              theme.colorScheme.primary,
-            ],
+            colors: [theme.colorScheme.secondary, theme.colorScheme.primary],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

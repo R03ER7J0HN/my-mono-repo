@@ -9,7 +9,6 @@ export 'src/domain/domain.dart';
 
 class FirebaseAuthentication {
   const FirebaseAuthentication._();
-
   static void initialize(GetIt di) {
     di
       ..registerLazySingleton<LocalDataSource>(
