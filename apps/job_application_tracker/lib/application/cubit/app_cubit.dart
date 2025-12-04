@@ -13,10 +13,7 @@ class AppCubit extends Cubit<AppState>
     this._notificationRepository,
     this._localNotificationService,
     this._authenticationRepository,
-  ) : super(const AppState(status: AppStatus.initial)) {
-    unawaited(checkAuthStatus());
-    unawaited(_initNotifications());
-  }
+  ) : super(const AppState(status: AppStatus.initial));
 
   final NotificationRepository _notificationRepository;
   final LocalNotificationService _localNotificationService;
@@ -25,13 +22,32 @@ class AppCubit extends Cubit<AppState>
   StreamSubscription<NotificationEntity>? _onMessageSubscription;
   StreamSubscription<NotificationEntity>? _onMessageOpenedAppSubscription;
 
+  Future<void> initialize() async {
+    unawaited(_initNotifications());
+    await checkAuthStatus();
+  }
+
   Future<void> checkAuthStatus() async {
-    // TODO(authentication): Put actual authentication check logic here
-    final user = await _authenticationRepository.getSignedInUser();
-    // Simulate some delay for checking auth status
-    Future.delayed(const Duration(seconds: 2), () {
-      safeEmit(const AppState(status: AppStatus.unauthenticated));
-    });
+    final result = await _authenticationRepository.getSignedInUser();
+    result.fold(
+      onFailure: (failure) {
+        safeEmit(
+          const AppState(status: AppStatus.unauthenticated),
+        );
+      },
+      onSuccess: (user) {
+        Future.delayed(
+          const Duration(seconds: 2),
+          () => safeEmit(
+            AppState(
+              status: user == null
+                  ? AppStatus.unauthenticated
+                  : AppStatus.authenticated,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

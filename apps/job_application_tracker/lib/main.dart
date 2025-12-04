@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +26,16 @@ void main() async {
 
   runApp(
     BlocProvider(
-      create: (_) => AppCubit(
-        GetIt.I<NotificationRepository>(),
-        GetIt.I<LocalNotificationService>(),
-        GetIt.I<AuthenticationRepository>(),
-      ),
+      create: (_) {
+        final cubit = AppCubit(
+          GetIt.I<NotificationRepository>(),
+          GetIt.I<LocalNotificationService>(),
+          GetIt.I<AuthenticationRepository>(),
+        );
+        unawaited(cubit.initialize());
+
+        return cubit;
+      },
       child: const MainApp(),
     ),
   );

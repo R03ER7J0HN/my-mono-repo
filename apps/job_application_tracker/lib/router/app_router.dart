@@ -7,8 +7,10 @@ import 'package:job_application_tracker/features/auth/forgot_password/forgot_pas
 import 'package:job_application_tracker/features/auth/sign_in/sign_in_screen.dart';
 import 'package:job_application_tracker/features/auth/sign_up/sign_up_screen.dart';
 import 'package:job_application_tracker/features/home/home_screen.dart';
+import 'package:job_application_tracker/features/profile/profile_screen.dart';
 import 'package:job_application_tracker/features/splash/splash_screen.dart';
 import 'package:job_application_tracker/router/app_routes.dart';
+import 'package:job_application_tracker/widgets/scaffold_with_nav_bar.dart';
 
 class AppRouter {
   const AppRouter(this.appCubit);
@@ -43,12 +45,37 @@ class AppRouter {
         builder: (context, state) => const SignUpScreen(),
       ),
       ShellRoute(
-        builder: (context, state, child) => Scaffold(body: child),
+        builder: (context, state, child) {
+          return ScaffoldWithNavBar(
+            items: [
+              NavigationItem(
+                routePath: AppRoutes.home.path,
+                routeName: AppRoutes.home.name,
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home,
+                label: 'Home',
+              ),
+              NavigationItem(
+                routePath: AppRoutes.profile.path,
+                routeName: AppRoutes.profile.name,
+                icon: Icons.person_outline,
+                selectedIcon: Icons.person,
+                label: 'Profile',
+              ),
+            ],
+            child: child,
+          );
+        },
         routes: [
           GoRoute(
             path: AppRoutes.home.path,
             name: AppRoutes.home.name,
             builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.profile.path,
+            name: AppRoutes.profile.name,
+            builder: (context, state) => const ProfileScreen(),
           ),
         ],
       ),
