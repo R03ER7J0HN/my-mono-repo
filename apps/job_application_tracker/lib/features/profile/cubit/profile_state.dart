@@ -11,4 +11,5 @@ sealed class ProfileState with _$ProfileState {
   const factory ProfileState.failure(String message) = _Failure;
   const factory ProfileState.loggedOut() = _LoggedOut;
   const factory ProfileState.accountDeleted() = _AccountDeleted;
+  const factory ProfileState.requiresReauth() = _Reauth;
 }

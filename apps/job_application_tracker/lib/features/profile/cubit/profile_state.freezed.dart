@@ -55,7 +55,7 @@ extension ProfileStatePatterns on ProfileState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Failure value)?  failure,TResult Function( _LoggedOut value)?  loggedOut,TResult Function( _AccountDeleted value)?  accountDeleted,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Failure value)?  failure,TResult Function( _LoggedOut value)?  loggedOut,TResult Function( _AccountDeleted value)?  accountDeleted,TResult Function( _Reauth value)?  requiresReauth,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -64,7 +64,8 @@ return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _Failure() when failure != null:
 return failure(_that);case _LoggedOut() when loggedOut != null:
 return loggedOut(_that);case _AccountDeleted() when accountDeleted != null:
-return accountDeleted(_that);case _:
+return accountDeleted(_that);case _Reauth() when requiresReauth != null:
+return requiresReauth(_that);case _:
   return orElse();
 
 }
@@ -82,7 +83,7 @@ return accountDeleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Failure value)  failure,required TResult Function( _LoggedOut value)  loggedOut,required TResult Function( _AccountDeleted value)  accountDeleted,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Failure value)  failure,required TResult Function( _LoggedOut value)  loggedOut,required TResult Function( _AccountDeleted value)  accountDeleted,required TResult Function( _Reauth value)  requiresReauth,}){
 final _that = this;
 switch (_that) {
 case _Initial():
@@ -91,7 +92,8 @@ return loading(_that);case _Loaded():
 return loaded(_that);case _Failure():
 return failure(_that);case _LoggedOut():
 return loggedOut(_that);case _AccountDeleted():
-return accountDeleted(_that);}
+return accountDeleted(_that);case _Reauth():
+return requiresReauth(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -105,7 +107,7 @@ return accountDeleted(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Failure value)?  failure,TResult? Function( _LoggedOut value)?  loggedOut,TResult? Function( _AccountDeleted value)?  accountDeleted,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Failure value)?  failure,TResult? Function( _LoggedOut value)?  loggedOut,TResult? Function( _AccountDeleted value)?  accountDeleted,TResult? Function( _Reauth value)?  requiresReauth,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -114,7 +116,8 @@ return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _Failure() when failure != null:
 return failure(_that);case _LoggedOut() when loggedOut != null:
 return loggedOut(_that);case _AccountDeleted() when accountDeleted != null:
-return accountDeleted(_that);case _:
+return accountDeleted(_that);case _Reauth() when requiresReauth != null:
+return requiresReauth(_that);case _:
   return null;
 
 }
@@ -131,7 +134,7 @@ return accountDeleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserEntity user)?  loaded,TResult Function( String message)?  failure,TResult Function()?  loggedOut,TResult Function()?  accountDeleted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserEntity user)?  loaded,TResult Function( String message)?  failure,TResult Function()?  loggedOut,TResult Function()?  accountDeleted,TResult Function()?  requiresReauth,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -139,7 +142,8 @@ return loading();case _Loaded() when loaded != null:
 return loaded(_that.user);case _Failure() when failure != null:
 return failure(_that.message);case _LoggedOut() when loggedOut != null:
 return loggedOut();case _AccountDeleted() when accountDeleted != null:
-return accountDeleted();case _:
+return accountDeleted();case _Reauth() when requiresReauth != null:
+return requiresReauth();case _:
   return orElse();
 
 }
@@ -157,7 +161,7 @@ return accountDeleted();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserEntity user)  loaded,required TResult Function( String message)  failure,required TResult Function()  loggedOut,required TResult Function()  accountDeleted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserEntity user)  loaded,required TResult Function( String message)  failure,required TResult Function()  loggedOut,required TResult Function()  accountDeleted,required TResult Function()  requiresReauth,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -165,7 +169,8 @@ return loading();case _Loaded():
 return loaded(_that.user);case _Failure():
 return failure(_that.message);case _LoggedOut():
 return loggedOut();case _AccountDeleted():
-return accountDeleted();}
+return accountDeleted();case _Reauth():
+return requiresReauth();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -179,7 +184,7 @@ return accountDeleted();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserEntity user)?  loaded,TResult? Function( String message)?  failure,TResult? Function()?  loggedOut,TResult? Function()?  accountDeleted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserEntity user)?  loaded,TResult? Function( String message)?  failure,TResult? Function()?  loggedOut,TResult? Function()?  accountDeleted,TResult? Function()?  requiresReauth,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -187,7 +192,8 @@ return loading();case _Loaded() when loaded != null:
 return loaded(_that.user);case _Failure() when failure != null:
 return failure(_that.message);case _LoggedOut() when loggedOut != null:
 return loggedOut();case _AccountDeleted() when accountDeleted != null:
-return accountDeleted();case _:
+return accountDeleted();case _Reauth() when requiresReauth != null:
+return requiresReauth();case _:
   return null;
 
 }
@@ -447,6 +453,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'ProfileState.accountDeleted()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Reauth implements ProfileState {
+  const _Reauth();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Reauth);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileState.requiresReauth()';
 }
 
 

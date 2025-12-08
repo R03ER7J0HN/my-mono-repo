@@ -3,12 +3,13 @@ import 'dart:ui';
 
 import 'package:authentication/firebase_authentication.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_core/flutter_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:job_application_tracker/application/cubit/app_cubit.dart';
 import 'package:job_application_tracker/features/profile/cubit/profile_cubit.dart';
 import 'package:job_application_tracker/features/profile/cubit/profile_state.dart';
-import 'package:job_application_tracker/router/app_navigator.dart';
+import 'package:job_application_tracker/features/profile/widgets/reauth_dialog.dart';
+import 'package:job_application_tracker/widgets/background_decoration.dart';
 import 'package:job_application_tracker/widgets/confirmation_bottom_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -35,8 +36,6 @@ class _ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -45,101 +44,48 @@ class _ProfileView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          // Background Gradient
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary.withValues(alpha: 0.15),
-                  colorScheme.surface,
-                  colorScheme.secondary.withValues(alpha: 0.1),
-                ],
-              ),
-            ),
-          ),
-          // Decorative Circles
-          Positioned(
-            top: -100,
-            right: -100,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.primary.withValues(alpha: 0.2),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(
-                      alpha: 0.1,
-                    ),
-                    blurRadius: 50,
-                    spreadRadius: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 100,
-            left: -50,
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.secondary.withValues(alpha: 0.2),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.secondary.withValues(
-                      alpha: 0.1,
-                    ),
-                    blurRadius: 50,
-                    spreadRadius: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // Content
-          SafeArea(
-            child: BlocConsumer<ProfileCubit, ProfileState>(
-              listener: (context, state) {
-                void logOutAndRedirect() {
+      body: BackgroundDecoration(
+        child: SafeArea(
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                failure: (message) {
+                  context.showSnackBar(
+                    message,
+                    type: SnackBarType.error,
+                  );
+                },
+                loggedOut: context.read<AppCubit>().logout,
+                accountDeleted: () {
+                  context.showSnackBar(
+                    'Account deleted successfully',
+                    type: SnackBarType.success,
+                  );
                   context.read<AppCubit>().logout();
-                  AppNavigator.goToSignIn(context);
-                }
+                },
+                requiresReauth: () async {
+                  final password = await showDialog<String>(
+                    context: context,
+                    builder: (context) => const ReauthDialog(),
+                  );
 
-                state.whenOrNull(
-                  failure: (message) =>
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(message)),
-                      ),
-                  loggedOut: logOutAndRedirect,
-                  accountDeleted: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Account deleted successfully'),
-                      ),
+                  if (password != null && context.mounted) {
+                    unawaited(
+                      context.cubit.reauthenticateAndDelete(password),
                     );
-                    logOutAndRedirect();
-                  },
-                );
-              },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  loaded: (user) => _buildProfileContent(context, user),
-                  orElse: () => const SizedBox.shrink(),
-                );
-              },
-            ),
+                  }
+                },
+              );
+            },
+            builder: (context, state) {
+              return state.maybeWhen(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                loaded: (user) => _buildProfileContent(context, user),
+                orElse: () => const SizedBox.shrink(),
+              );
+            },
           ),
-        ],
+        ),
       ),
     );
   }
@@ -374,9 +320,9 @@ class _ProfileView extends StatelessWidget {
         title: 'Delete Account',
         message: '''
 Are you sure you want to delete your account? This action cannot be undone.''',
-        confirmText: 'Delete',
+        confirmWidget: const Text('Delete'),
         isDestructive: true,
-        onConfirm: context.cubit.deleteAccount,
+        onConfirm: () => context.cubit.deleteAccount(),
       ),
     );
   }

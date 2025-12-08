@@ -45,17 +45,43 @@ class ProfileCubit extends Cubit<ProfileState>
 
   Future<void> deleteAccount() async {
     await state.whenOrNull(
-      loaded: (currentUser) async {
+      loaded: (currentUser) async => _performAccountDeletion(currentUser),
+    );
+  }
+
+  Future<void> _performAccountDeletion(UserEntity currentUser) async {
+    safeEmit(const ProfileState.loading());
+
+    final result = await _authRepository.deleteAccount();
+
+    result.fold(
+      onFailure: (failure) {
+        if (failure is AuthFailure &&
+            failure.code == AuthErrorCode.recentLoginRequired) {
+          safeEmit(const ProfileState.requiresReauth());
+        } else {
+          safeEmit(ProfileState.failure(failure.message));
+        }
+        safeEmit(ProfileState.loaded(currentUser));
+      },
+      onSuccess: (_) => safeEmit(const ProfileState.accountDeleted()),
+    );
+  }
+
+  Future<void> reauthenticateAndDelete(String password) async {
+    await state.whenOrNull(
+      loaded: (user) async {
         safeEmit(const ProfileState.loading());
 
-        final result = await _authRepository.deleteAccount();
+        final result = await _authRepository.reauthenticate(password);
 
-        result.fold(
+        await result.fold(
           onFailure: (failure) {
             safeEmit(ProfileState.failure(failure.message));
-            safeEmit(ProfileState.loaded(currentUser));
+            safeEmit(ProfileState.loaded(user));
+            return;
           },
-          onSuccess: (_) => safeEmit(const ProfileState.accountDeleted()),
+          onSuccess: (_) => _performAccountDeletion(user),
         );
       },
     );

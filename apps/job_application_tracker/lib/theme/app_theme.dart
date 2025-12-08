@@ -59,6 +59,12 @@ class AppTheme {
           vertical: 16,
         ),
       ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: _backgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+      ),
       cardTheme: CardThemeData(
         color: _surfaceColor,
         elevation: 4,
