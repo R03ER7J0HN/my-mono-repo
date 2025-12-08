@@ -20,6 +20,9 @@ class FirebaseFailure extends Failure {
 
   factory FirebaseFailure.userNotFound() =>
       const FirebaseFailure('User not found');
+
+  factory FirebaseFailure.emailNotFound() =>
+      const FirebaseFailure('Email not found');
 }
 
 class FormatFailure extends Failure {
