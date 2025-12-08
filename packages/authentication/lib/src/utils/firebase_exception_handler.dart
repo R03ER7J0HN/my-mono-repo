@@ -41,7 +41,8 @@ mixin FirebaseExceptionHandler {
         );
       case 'requires-recent-login':
         return const AuthFailure(
-          'This operation will require re-authentication. Please enter your credentials',
+          '''
+This operation will require re-authentication. Please enter your credentials''',
           AuthErrorCode.recentLoginRequired,
         );
       case 'user-disabled':
