@@ -7,8 +7,7 @@ import 'package:job_application_tracker/application/cubit/app_state.dart';
 import 'package:job_application_tracker/application/notification/local_notification_service.dart';
 import 'package:notification/firebase_notification.dart';
 
-class AppCubit extends Cubit<AppState>
-    with ChangeNotifier, SafeEmitMixin<AppState> {
+class AppCubit extends Cubit<AppState> with SafeEmitMixin<AppState> {
   AppCubit(
     this._notificationRepository,
     this._localNotificationService,
@@ -26,6 +25,14 @@ class AppCubit extends Cubit<AppState>
     unawaited(_initNotifications());
     await checkAuthStatus();
   }
+
+  void login() => safeEmit(
+    const AppState(status: AppStatus.authenticated),
+  );
+
+  void logout() => safeEmit(
+    const AppState(status: AppStatus.unauthenticated),
+  );
 
   Future<void> checkAuthStatus() async {
     final result = await _authenticationRepository.getSignedInUser();
@@ -56,16 +63,6 @@ class AppCubit extends Cubit<AppState>
     await _onMessageOpenedAppSubscription?.cancel();
     return super.close();
   }
-
-  @override
-  void emit(AppState state) {
-    super.emit(state);
-    notifyListeners();
-  }
-
-  void login() => safeEmit(const AppState(status: AppStatus.authenticated));
-
-  void logout() => safeEmit(const AppState(status: AppStatus.unauthenticated));
 
   Future<void> _initNotifications() async {
     await _localNotificationService.initialize();

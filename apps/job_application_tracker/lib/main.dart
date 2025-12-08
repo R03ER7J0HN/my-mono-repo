@@ -15,7 +15,10 @@ import 'package:job_application_tracker/features/splash/l10n/gen/app_localizatio
 import 'package:job_application_tracker/router/app_router.dart';
 import 'package:job_application_tracker/theme/app_theme.dart';
 
-void main() async {
+void main() async => await initializeMainApp();
+
+// This method is separated from main to allow easier product flavoring soon.
+Future<void> initializeMainApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Injector.initialize();
@@ -24,25 +27,28 @@ void main() async {
     BackgroundNotificationHandler.handleFirebaseMessaging,
   );
 
-  runApp(
-    BlocProvider(
-      create: (_) {
-        final cubit = AppCubit(
-          GetIt.I<NotificationRepository>(),
-          GetIt.I<LocalNotificationService>(),
-          GetIt.I<AuthenticationRepository>(),
-        );
-        unawaited(cubit.initialize());
+  final cubit = AppCubit(
+    GetIt.I<NotificationRepository>(),
+    GetIt.I<LocalNotificationService>(),
+    GetIt.I<AuthenticationRepository>(),
+  );
+  unawaited(cubit.initialize());
 
-        return cubit;
-      },
-      child: const MainApp(),
+  runApp(
+    BlocProvider.value(
+      value: cubit,
+      child: MainApp(AppRouter(cubit).instance),
     ),
   );
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp(
+    this.routerConfig, {
+    super.key,
+  });
+
+  final RouterConfig<Object> routerConfig;
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
@@ -57,9 +63,7 @@ class MainApp extends StatelessWidget {
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    routerConfig: AppRouter(
-      context.read<AppCubit>(),
-    ).setup,
+    routerConfig: routerConfig,
     supportedLocales: const [Locale('en')],
     locale: const Locale('en'),
   );

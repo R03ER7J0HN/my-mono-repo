@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_core/flutter_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_application_tracker/application/cubit/cubit.dart';
 import 'package:job_application_tracker/features/auth/forgot_password/forgot_password_screen.dart';
@@ -13,36 +14,36 @@ import 'package:job_application_tracker/router/app_routes.dart';
 import 'package:job_application_tracker/widgets/scaffold_with_nav_bar.dart';
 
 class AppRouter {
-  const AppRouter(this.appCubit);
+  AppRouter(this.appCubit);
 
   final AppCubit appCubit;
 
-  GoRouter get setup => GoRouter(
+  late final GoRouter instance = GoRouter(
     initialLocation: AppRoutes.splash.path,
     redirect: _redirectHandler,
-    refreshListenable: appCubit,
+    refreshListenable: StreamListenable(appCubit.stream),
     routes: [
       GoRoute(
         name: AppRoutes.splash.name,
         path: AppRoutes.splash.path,
-        builder: (context, state) => const SplashScreen(),
+        builder: (_, _) => const SplashScreen(),
       ),
       GoRoute(
         name: AppRoutes.signIn.name,
         path: AppRoutes.signIn.path,
-        builder: (context, state) => const SignInScreen(),
+        builder: (_, _) => const SignInScreen(),
         routes: [
           GoRoute(
             name: AppRoutes.forgotPassword.name,
             path: AppRoutes.forgotPassword.path,
-            builder: (context, state) => const ForgotPasswordScreen(),
+            builder: (_, _) => const ForgotPasswordScreen(),
           ),
         ],
       ),
       GoRoute(
         name: AppRoutes.signUp.name,
         path: AppRoutes.signUp.path,
-        builder: (context, state) => const SignUpScreen(),
+        builder: (_, _) => const SignUpScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) {
@@ -70,12 +71,12 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.home.path,
             name: AppRoutes.home.name,
-            builder: (context, state) => const HomeScreen(),
+            builder: (_, _) => const HomeScreen(),
           ),
           GoRoute(
             path: AppRoutes.profile.path,
             name: AppRoutes.profile.name,
-            builder: (context, state) => const ProfileScreen(),
+            builder: (_, _) => const ProfileScreen(),
           ),
         ],
       ),
