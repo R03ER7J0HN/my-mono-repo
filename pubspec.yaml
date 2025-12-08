@@ -17,8 +17,10 @@ dev_dependencies:
 
 melos:
   scripts:
-    build_runner:
+    build-files:
       run: melos exec -- dart run build_runner build --delete-conflicting-outputs
     enforce_analysis_file:
       run: |
         find . -name analysis_options.yaml -not -path "./analysis_options.yaml" -delete
+  ignore:
+    - firebase/**

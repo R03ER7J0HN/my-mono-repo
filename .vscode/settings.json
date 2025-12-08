@@ -1,0 +1,9 @@
+{
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.workingDirectories": [
+    {
+      "directory": "./firebase",
+      "mode": "auto"
+    }
+  ]
+}

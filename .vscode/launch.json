@@ -1,35 +1,33 @@
 {
-    "version": "0.2.0",
-    "inputs": [
-        {
-            "id": "pickPackage",
-            "type": "pickString",
-            "description": "Select the package to launch",
-            "options": [
-                "apps/job_application_tracker",
-            ],
-            "default": "apps/job_application_tracker"
-        }
-    ],
-    "configurations": [
-        {
-            "name": "my-mono-repo (root)",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "Launch Selected Package (debug mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "debug",
-            "cwd": "${input:pickPackage}"
-        },
-        {
-            "name": "Launch Selected Package (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release",
-            "cwd": "${input:pickPackage}"
-        }
-    ]
+  "configurations": [
+    {
+      "name": "my-mono-repo (root)",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "cwd": "${input:pickPackage}",
+      "flutterMode": "debug",
+      "name": "Select App (debug)",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "cwd": "${input:pickPackage}",
+      "flutterMode": "release",
+      "name": "Select App (release)",
+      "request": "launch",
+      "type": "dart"
+    }
+  ],
+  "inputs": [
+    {
+      "default": "apps/job_application_tracker",
+      "description": "Select the package to launch",
+      "id": "pickPackage",
+      "options": ["apps/job_application_tracker"],
+      "type": "pickString"
+    }
+  ],
+  "version": "0.2.0"
 }
