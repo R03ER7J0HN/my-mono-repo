@@ -31,7 +31,7 @@ mixin FirebaseExceptionHandler {
     switch (exception.code) {
       case 'invalid-credential':
         return const AuthFailure(
-          'Either the email address or password is invalid.',
+          'The credential you entered is invalid.',
           AuthErrorCode.invalidCredential,
         );
       case 'invalid-email':
