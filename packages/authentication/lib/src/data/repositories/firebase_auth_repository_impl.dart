@@ -86,6 +86,28 @@ class FirebaseAuthRepositoryImpl
     );
   }
 
+  @override
+  FutureResult<void> reauthenticate(String password) async {
+    final currentUser = _firebaseAuth.currentUser;
+    final email = currentUser?.email;
+
+    if (currentUser == null) {
+      return Result.failure(FirebaseFailure.notLoggedIn());
+    }
+
+    if (email == null) throw FirebaseFailure.emailNotFound();
+
+    final credential = EmailAuthProvider.credential(
+      email: currentUser.email!,
+      password: password,
+    );
+
+    return handleFirebaseException(
+      currentUser.reauthenticateWithCredential(credential),
+      onSuccess: (_) {},
+    );
+  }
+
   UserEntity _mapFirebaseUserToUserEntity(User user) => UserEntity(
     uid: user.uid,
     email: user.email,

@@ -387,4 +387,45 @@ void main() {
       );
     });
   });
+
+  group('reauthentication', () {
+    test('returns success when reauthentication completes', () async {
+      // Arrange
+      stubUser();
+      stubCredentialWithUser();
+      when(mockFirebaseAuth.currentUser).thenReturn(mockUser);
+      when(
+        mockUser.reauthenticateWithCredential(
+          any,
+        ),
+      ).thenAnswer((_) async => mockUserCredential);
+
+      // Act
+      final result = await repository.reauthenticate(tPassword);
+
+      // Assert
+      expect(result.isSuccess, true);
+      verify(
+        mockUser.reauthenticateWithCredential(
+          any,
+        ),
+      );
+    });
+
+    test('returns FirebaseFailure when no user logged in', () async {
+      // Arrange
+      when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+      // Act
+      final result = await repository.reauthenticate(tPassword);
+
+      // Assert
+      expect(result.isFailure, true);
+      expect(result.getFailure(), isA<FirebaseFailure>());
+      expect(
+        result.getFailure().message,
+        equals(FirebaseFailure.notLoggedIn().message),
+      );
+    });
+  });
 }

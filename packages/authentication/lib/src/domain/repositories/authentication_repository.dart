@@ -18,5 +18,7 @@ abstract class AuthenticationRepository {
     required String password,
   });
 
+  FutureResult<void> reauthenticate(String password);
+
   FutureResult<void> sendPasswordResetEmail({required String email});
 }
