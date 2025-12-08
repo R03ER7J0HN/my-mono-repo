@@ -9,11 +9,11 @@ enum SnackBarType {
 
 extension SnackBarContextExtension on BuildContext {
   void showSnackBar(
-    Widget content, {
+    String message, {
     SnackBarType type = SnackBarType.defaultType,
   }) => ScaffoldMessenger.of(this).showSnackBar(
     SnackBar(
-      content: content,
+      content: Text(message),
       backgroundColor: switch (type) {
         SnackBarType.info => Colors.blue,
         SnackBarType.success => Colors.green,
