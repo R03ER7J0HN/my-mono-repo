@@ -45,26 +45,29 @@ class _SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<_SignUpView> {
+  final _formKey = GlobalKey<FormState>();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
-  bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
+  final _isPasswordVisible = ValueNotifier<bool>(false);
+  final _isConfirmPasswordVisible = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _isPasswordVisible.dispose();
+    _isConfirmPasswordVisible.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (_formKey.currentState?.validate() ?? false) {
       unawaited(
-        context.read<SignUpCubit>().signUpWithEmailAndPassword(
+        context.cubit.signUpWithEmailAndPassword(
           _emailController.text.trim(),
           _passwordController.text,
         ),
@@ -153,65 +156,16 @@ class _SignUpViewState extends State<_SignUpView> {
                             },
                           ),
                           const SizedBox(height: 20),
-                          TextFormField(
+                          _buildPasswordWidget(
                             controller: _passwordController,
-                            obscureText: !_isPasswordVisible,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
+                            label: 'Password',
+                            valueNotifier: _isPasswordVisible,
                           ),
                           const SizedBox(height: 20),
-                          TextFormField(
+                          _buildPasswordWidget(
                             controller: _confirmPasswordController,
-                            obscureText: !_isConfirmPasswordVisible,
-                            decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isConfirmPasswordVisible
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isConfirmPasswordVisible =
-                                        !_isConfirmPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value != _passwordController.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
+                            label: 'Confirm Password',
+                            valueNotifier: _isConfirmPasswordVisible,
                           ),
                           const SizedBox(height: 24),
 
@@ -277,4 +231,45 @@ class _SignUpViewState extends State<_SignUpView> {
       ),
     );
   }
+
+  Widget _buildPasswordWidget({
+    required String label,
+    required TextEditingController controller,
+    required ValueNotifier<bool> valueNotifier,
+  }) => ValueListenableBuilder(
+    valueListenable: valueNotifier,
+    builder: (context, isVisible, child) {
+      return TextFormField(
+        controller: controller,
+        obscureText: !isVisible,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: const Icon(Icons.lock_outline),
+          suffixIcon: ExcludeFocus(
+            child: IconButton(
+              icon: Icon(
+                isVisible
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+              ),
+              onPressed: () => valueNotifier.value = !isVisible,
+            ),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your password';
+          }
+          if (value.length < 6) {
+            return 'Password must be at least 6 characters';
+          }
+          return null;
+        },
+      );
+    },
+  );
+}
+
+extension CubitX on BuildContext {
+  SignUpCubit get cubit => read<SignUpCubit>();
 }
