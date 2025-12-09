@@ -11,6 +11,7 @@ analyzer:
     - "**l10n.dart"
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
     # Build folders
     - "**/build/**"
     - "**/node_modules/**"
