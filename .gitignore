@@ -1,4 +1,139 @@
+############################################################
+# UNIVERSAL IGNORES (OS, logs, temp files)
+############################################################
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+############################################################
+# MELOS / MONOREPO WORKSPACE
+############################################################
+
+.melos_tool/
+melos_bootstrap.json
+
+############################################################
+# FLUTTER / DART
+############################################################
+
+# Dart tool directories
 .dart_tool/
-.idea/
+.buildlog/
+.pub-cache/
+.packages
+*.dill
+
+# Build outputs
 build/
-devtools_options.yaml
+**/build/
+
+# Generated Dart sources
+generated_plugin_registrant.dart
+
+# Flutter-specific metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-versions
+.flutter-configuration
+flutter_export_environment.sh
+
+# Platform builds
+**/ios/Pods/
+**/ios/Podfile.lock
+**/ios/DerivedData/
+**/ios/xcuserdata/
+
+**/android/.gradle/
+**/android/local.properties
+**/android/*.keystore
+**/android/key.properties
+
+# Web build outputs
+web/.dart_tool/
+web/.firebase/
+coverage/
+
+############################################################
+# TYPESCRIPT / NODEJS
+############################################################
+
+# Dependency directories
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+.esbuild/
+.next/
+.nuxt/
+.cache/
+
+# TypeScript cache
+*.tsbuildinfo
+*.map
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Lock files (best practice for monorepos: keep JS unlocked)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+############################################################
+# IDE / EDITOR
+############################################################
+
+# VSCode
+.vscode/
+# Optional if you want to keep workspace settings:
+# !.vscode/settings.json
+# !.vscode/launch.json
+# !.vscode/tasks.json
+
+# JetBrains / Android Studio
+.idea/
+*.iml
+
+# Xcode
+*.xcuserstate
+project.xcworkspace/xcuserdata/
+
+# Others
+*.code-workspace
+
+############################################################
+# OPTIONAL (SAFE DEFAULTS)
+############################################################
+
+# Firebase
+.firebase/
+firestore-debug.log
+
+# Local dev files
+*.local
+*.private
+
+# Misc
+.sass-cache/
