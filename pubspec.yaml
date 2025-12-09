@@ -9,18 +9,34 @@ workspace:
   - packages/authentication
   - packages/notification
   - packages/location_tracking
+  - packages/job_application
 
 dev_dependencies:
-  build_runner: ^2.10.4
   melos: ^7.3.0
   very_good_analysis: ^10.0.0
 
 melos:
   scripts:
     build-files:
-      run: melos exec -- dart run build_runner build --delete-conflicting-outputs
+      run: dart run build_runner build --delete-conflicting-outputs
+      exec:
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
     enforce_analysis_file:
       run: |
         find . -name analysis_options.yaml -not -path "./analysis_options.yaml" -delete
+    test:
+      run: melos exec -- flutter test
+    outdated:
+      run: flutter pub outdated
+      exec:
+        concurrency: 1
+      packageFilters:
+    upgrade:
+      run: flutter pub upgrade --major-versions
+      exec:
+        concurrency: 1
+      packageFilters:
   ignore:
     - firebase/**
