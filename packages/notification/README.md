@@ -9,18 +9,17 @@ This package follows a **Domain-Data split** architecture, designed to be modula
 ### Key Concepts
 
 1.  **Remote vs. Local Separation:**
-
     - This package is responsible **ONLY** for the **Remote** data source (fetching data from Firebase).
     - It is **NOT** responsible for displaying local notifications (banners, sounds, vibrations). That is the responsibility of the consuming application (Presentation Layer).
 
 2.  **Repository Pattern:**
-    - We use `RemoteNotificationRepository` as the abstraction. This treats notifications as a data source that provides a stream of events, rather than a "service" that performs actions.
+    - We use `NotificationRepository` as the abstraction. This treats notifications as a data source that provides a stream of events, rather than a "service" that performs actions.
 
 ### Layering
 
 | Layer      | Component                        | Role                                                                                                                     |
 | :--------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| **Domain** | `RemoteNotificationRepository`   | **(Abstract Interface)** The contract that the app depends on. Defines _what_ we can do (get token, listen to messages). |
+| **Domain** | `NotificationRepository`         | **(Abstract Interface)** The contract that the app depends on. Defines _what_ we can do (get token, listen to messages). |
 | **Domain** | `Notification`                   | **(Entity)** A pure, immutable Dart object representing a notification. Decoupled from Firebase's `RemoteMessage`.       |
 | **Data**   | `FirebaseNotificationRepository` | **(Implementation)** The concrete class that talks to `firebase_messaging`. It maps raw data to Domain Entities.         |
 
@@ -49,28 +48,28 @@ void main() async {
 
 ### 2. Consuming in the App Layer (e.g., Cubit)
 
-Inject the `RemoteNotificationRepository` into your Cubit. Do not depend on the concrete implementation.
+Inject the `NotificationRepository` into your Cubit. Do not depend on the concrete implementation.
 
 ```dart
 class AppCubit extends Cubit<AppState> {
-  final RemoteNotificationRepository _remoteRepository;
-  final LocalNotificationService _localService; // Your app's local handler
+  final NotificationRepository _notificationRepository;
+  final LocalNotificationService _localNotificationService; // Your app's local handler
 
   AppCubit({
-    required RemoteNotificationRepository remoteRepository,
-    required LocalNotificationService localService,
-  })  : _remoteRepository = remoteRepository,
-        _localService = localService,
+    required NotificationRepository notificationRepository,
+    required LocalNotificationService localNotificationService,
+  })  : _notificationRepository = notificationRepository,
+        _localNotificationService = localNotificationService,
         super(AppState.initial()) {
     _initNotifications();
   }
 
   void _initNotifications() {
     // Listen to remote data
-    _remoteRepository.onMessage.listen((notification) {
+    _notificationRepository.onMessage.listen((notification) {
       // Decide how to present it locally
       if (notification.title != null) {
-        _localService.showNotification(
+        _localNotificationService.showNotification(
           title: notification.title!,
           body: notification.body!
         );
@@ -82,15 +81,15 @@ class AppCubit extends Cubit<AppState> {
 
 ## Testing
 
-This architecture makes testing easy. You can mock `RemoteNotificationRepository` to simulate incoming notifications without needing a real Firebase connection.
+This architecture makes testing easy. You can mock `NotificationRepository` to simulate incoming notifications without needing a real Firebase connection.
 
 ```dart
 // Mocking in tests
-class MockRemoteNotificationRepository extends Mock implements RemoteNotificationRepository {}
+class MockNotificationRepository extends Mock implements NotificationRepository {}
 
 void main() {
   test('AppCubit handles incoming notification', () {
-    final mockRepo = MockRemoteNotificationRepository();
+    final mockRepo = MockNotificationRepository();
     when(mockRepo.onMessage).thenAnswer((_) => Stream.value(
       Notification(title: 'Test', body: 'Body')
     ));
@@ -99,3 +98,10 @@ void main() {
   });
 }
 ```
+
+## 🚀 Highlights
+
+- **Pragmatic Clean Architecture**: Demonstrates a clear separation of Domain and Data layers.
+- **Repository Pattern**: Abstracts the data source (`firebase_messaging`) behind a clean interface (`NotificationRepository`).
+- **Stream-Based Architecture**: Treats notifications as a reactive stream of events.
+- **Testability**: Designed with dependency injection in mind, allowing for easy mocking of remote services.
