@@ -2,7 +2,7 @@
 
 A reusable, secure authentication module for the Job Application Tracker workspace.
 
-## Architecture: Pragmatic Clean Architecture
+## Architecture: Clean Architecture + Modular Monolith
 
 This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
 
