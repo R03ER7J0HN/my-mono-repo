@@ -1,39 +1,102 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Location Tracking Package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A module dedicated to handling geolocation services and map visualizations.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+## Architecture: MVVM, Clean Architecture, Modular Monolith
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
 
-## Features
+### Key Concepts
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+1.  **Abstraction of Hardware:**
+    - The `Geolocator` package is wrapped behind a domain interface. This allows the app to request location data without knowing the underlying implementation details.
+    - It simplifies testing by allowing location services to be mocked easily.
 
-## Getting started
+2.  **Presentation Isolation:**
+    - Map widgets and logic are contained within this package, exposing high-level components to the main app rather than raw map controllers.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+### Layering
+
+| Layer | Component | Role |
+| :--- | :--- | :--- |
+| **Domain** | `LocationRepository` | **(Abstract Interface)** Contract for fetching current position and permission status. |
+| **Domain** | `LocationEntity` | **(Entity)** Pure object representing coordinates (lat, long). |
+| **Data** | `GeolocatorRepository` | **(Implementation)** Uses `geolocator` plugin to fetch device location. |
+<!-- | **Presentation** | `MapView` | **(Widget)** A reusable widget that wraps `GoogleMap` and handles markers. | -->
+
+## Installation
+
+1.  Add the dependency to your `pubspec.yaml`.
+2.  Configure AndroidManifest.xml and Info.plist for location permissions.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### 1. Initialization
+
+Register the repository.
 
 ```dart
-const like = 'sample';
+void main() {
+  LocationTracking.initialize(GetIt.I);
+}
 ```
 
-## Additional information
+### 2. Fetching Location
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+class LocationCubit extends Cubit<LocationState> {
+  final LocationRepository _repository;
+
+  LocationCubit({required LocationRepository repository})
+      : _repository = repository,
+        super(LocationInitial());
+
+  Future<void> checkLocation() async {
+    final result = await _repository.getCurrentPosition();
+    result.fold(
+      (failure) => emit(LocationError(failure)),
+      (location) => emit(LocationLoaded(location)),
+    );
+  }
+}
+```
+
+<!-- ### 3. Using the Map Widget
+
+```dart
+class JobMapScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: MapView(
+        initialPosition: const Location(lat: 37.77, long: -122.41),
+        markers: _getJobMarkers(),
+      ),
+    );
+  }
+}
+```
+
+## Testing
+
+You can test location logic without needing a physical device or emulator.
+
+```dart
+class MockLocationRepo extends Mock implements LocationRepository {}
+
+void main() {
+  test('LocationCubit emits loaded when position is found', () async {
+    final mockRepo = MockLocationRepo();
+    when(mockRepo.getCurrentPosition()).thenAnswer((_) async => Right(testLocation));
+    
+    // ... assert Cubit state
+  });
+}
+``` -->
+
+## 🚀 Highlights
+
+- **Google Maps Integration**: Wraps `google_maps_flutter` to provide map views, markers, and camera control.
+- **Geolocation Services**: Manages user permissions and retrieves real-time location updates using `geolocator`.
+- **Modularity**: Isolates complex map logic from the main UI, making the codebase cleaner and the feature reusable.
+- **Reactive Location Updates**: Exposes location data streams for real-time UI updates.
