@@ -2,6 +2,7 @@ enum JobPlatform {
   linkedIn,
   indeed,
   glassdoor,
+  jobstreet,
   weworkremotely,
   upwork,
   other
@@ -15,6 +16,8 @@ enum JobPlatform {
         return 'Indeed';
       case JobPlatform.glassdoor:
         return 'Glassdoor';
+      case JobPlatform.jobstreet:
+        return 'JobStreet';
       case JobPlatform.weworkremotely:
         return 'We Work Remotely';
       case JobPlatform.upwork:
@@ -26,13 +29,16 @@ enum JobPlatform {
 
   static JobPlatform fromUrl(String url) {
     if (url.isEmpty) return JobPlatform.other;
+
     final uri = Uri.tryParse(url);
+
     if (uri == null) return JobPlatform.other;
 
     final host = uri.host.toLowerCase();
     if (host.contains('linkedin')) return JobPlatform.linkedIn;
     if (host.contains('indeed')) return JobPlatform.indeed;
     if (host.contains('glassdoor')) return JobPlatform.glassdoor;
+    if (host.contains('jobstreet')) return JobPlatform.jobstreet;
     if (host.contains('weworkremotely')) return JobPlatform.weworkremotely;
     if (host.contains('upwork')) return JobPlatform.upwork;
 

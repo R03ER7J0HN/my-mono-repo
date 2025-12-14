@@ -4,7 +4,9 @@ enum AppRoutes {
   signIn('/sign-in'),
   signUp('/sign-up'),
   forgotPassword('forgot-password'),
-  profile('/profile');
+  profile('/profile'),
+  jobs('/jobs'),
+  jobEntry('/job-entry');
 
   const AppRoutes(this.path);
 

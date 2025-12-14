@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JobApplicationEntity {
 
- String get id; String get userId; String get companyName; String get jobTitle; String get jobLink; JobPlatform get platform; WorkSetup get workSetup; EmploymentType get employmentType; DateTime get dateApplied; String? get recruiterName; JobLocationEntity? get location; double? get salaryRequested; String? get currency;// e.g. "USD", "EUR"
+ String get id; String get userId; String get companyName; String get jobTitle; String get jobLink; JobPlatform get platform; WorkSetup get workSetup; EmploymentType get employmentType; DateTime get dateApplied; String? get recruiterName; JobLocationEntity? get location; int? get salaryRequested; String? get currency;// e.g. "USD", "EUR"
  String? get notes; List<DateTime> get interviewDates; List<DateTime> get deadlines; JobStatus get status;
 /// Create a copy of JobApplicationEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -46,7 +46,7 @@ abstract mixin class $JobApplicationEntityCopyWith<$Res>  {
   factory $JobApplicationEntityCopyWith(JobApplicationEntity value, $Res Function(JobApplicationEntity) _then) = _$JobApplicationEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, String companyName, String jobTitle, String jobLink, JobPlatform platform, WorkSetup workSetup, EmploymentType employmentType, DateTime dateApplied, String? recruiterName, JobLocationEntity? location, double? salaryRequested, String? currency, String? notes, List<DateTime> interviewDates, List<DateTime> deadlines, JobStatus status
+ String id, String userId, String companyName, String jobTitle, String jobLink, JobPlatform platform, WorkSetup workSetup, EmploymentType employmentType, DateTime dateApplied, String? recruiterName, JobLocationEntity? location, int? salaryRequested, String? currency, String? notes, List<DateTime> interviewDates, List<DateTime> deadlines, JobStatus status
 });
 
 
@@ -77,7 +77,7 @@ as EmploymentType,dateApplied: null == dateApplied ? _self.dateApplied : dateApp
 as DateTime,recruiterName: freezed == recruiterName ? _self.recruiterName : recruiterName // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as JobLocationEntity?,salaryRequested: freezed == salaryRequested ? _self.salaryRequested : salaryRequested // ignore: cast_nullable_to_non_nullable
-as double?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as int?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,interviewDates: null == interviewDates ? _self.interviewDates : interviewDates // ignore: cast_nullable_to_non_nullable
 as List<DateTime>,deadlines: null == deadlines ? _self.deadlines : deadlines // ignore: cast_nullable_to_non_nullable
@@ -176,7 +176,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  double? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  int? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JobApplicationEntity() when $default != null:
 return $default(_that.id,_that.userId,_that.companyName,_that.jobTitle,_that.jobLink,_that.platform,_that.workSetup,_that.employmentType,_that.dateApplied,_that.recruiterName,_that.location,_that.salaryRequested,_that.currency,_that.notes,_that.interviewDates,_that.deadlines,_that.status);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.userId,_that.companyName,_that.jobTitle,_that.job
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  double? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  int? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _JobApplicationEntity():
 return $default(_that.id,_that.userId,_that.companyName,_that.jobTitle,_that.jobLink,_that.platform,_that.workSetup,_that.employmentType,_that.dateApplied,_that.recruiterName,_that.location,_that.salaryRequested,_that.currency,_that.notes,_that.interviewDates,_that.deadlines,_that.status);}
@@ -214,7 +214,7 @@ return $default(_that.id,_that.userId,_that.companyName,_that.jobTitle,_that.job
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  double? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String companyName,  String jobTitle,  String jobLink,  JobPlatform platform,  WorkSetup workSetup,  EmploymentType employmentType,  DateTime dateApplied,  String? recruiterName,  JobLocationEntity? location,  int? salaryRequested,  String? currency,  String? notes,  List<DateTime> interviewDates,  List<DateTime> deadlines,  JobStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _JobApplicationEntity() when $default != null:
 return $default(_that.id,_that.userId,_that.companyName,_that.jobTitle,_that.jobLink,_that.platform,_that.workSetup,_that.employmentType,_that.dateApplied,_that.recruiterName,_that.location,_that.salaryRequested,_that.currency,_that.notes,_that.interviewDates,_that.deadlines,_that.status);case _:
@@ -243,7 +243,7 @@ class _JobApplicationEntity implements JobApplicationEntity {
 @override final  DateTime dateApplied;
 @override final  String? recruiterName;
 @override final  JobLocationEntity? location;
-@override final  double? salaryRequested;
+@override final  int? salaryRequested;
 @override final  String? currency;
 // e.g. "USD", "EUR"
 @override final  String? notes;
@@ -293,7 +293,7 @@ abstract mixin class _$JobApplicationEntityCopyWith<$Res> implements $JobApplica
   factory _$JobApplicationEntityCopyWith(_JobApplicationEntity value, $Res Function(_JobApplicationEntity) _then) = __$JobApplicationEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, String companyName, String jobTitle, String jobLink, JobPlatform platform, WorkSetup workSetup, EmploymentType employmentType, DateTime dateApplied, String? recruiterName, JobLocationEntity? location, double? salaryRequested, String? currency, String? notes, List<DateTime> interviewDates, List<DateTime> deadlines, JobStatus status
+ String id, String userId, String companyName, String jobTitle, String jobLink, JobPlatform platform, WorkSetup workSetup, EmploymentType employmentType, DateTime dateApplied, String? recruiterName, JobLocationEntity? location, int? salaryRequested, String? currency, String? notes, List<DateTime> interviewDates, List<DateTime> deadlines, JobStatus status
 });
 
 
@@ -324,7 +324,7 @@ as EmploymentType,dateApplied: null == dateApplied ? _self.dateApplied : dateApp
 as DateTime,recruiterName: freezed == recruiterName ? _self.recruiterName : recruiterName // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as JobLocationEntity?,salaryRequested: freezed == salaryRequested ? _self.salaryRequested : salaryRequested // ignore: cast_nullable_to_non_nullable
-as double?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as int?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,interviewDates: null == interviewDates ? _self._interviewDates : interviewDates // ignore: cast_nullable_to_non_nullable
 as List<DateTime>,deadlines: null == deadlines ? _self._deadlines : deadlines // ignore: cast_nullable_to_non_nullable

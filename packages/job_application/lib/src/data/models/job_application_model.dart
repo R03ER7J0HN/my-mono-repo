@@ -106,7 +106,7 @@ class JobApplicationModel {
   final String? recruiterName;
   final WorkSetup workSetup;
   final JobLocationModel? location;
-  final double? salaryRequested;
+  final int? salaryRequested;
   final String? currency;
   final EmploymentType employmentType;
   final String? notes;

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:authentication/firebase_authentication.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:job_application_tracker/features/profile/cubit/profile_state.dar
 import 'package:job_application_tracker/features/profile/widgets/reauth_dialog.dart';
 import 'package:job_application_tracker/widgets/background_decoration.dart';
 import 'package:job_application_tracker/widgets/confirmation_bottom_sheet.dart';
+import 'package:job_application_tracker/widgets/glass_card.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -98,37 +98,38 @@ class _ProfileView extends StatelessWidget {
           const SizedBox(height: 20),
           _buildProfileHeader(context, user),
           const SizedBox(height: 32),
-          _buildGlassCard(
-            context,
-            children: [
-              _buildInfoTile(
-                context,
-                Icons.email_outlined,
-                'Email',
-                user.email ?? 'No Email',
-              ),
-              const Divider(height: 1),
-              _buildInfoTile(
-                context,
-                Icons.fingerprint,
-                'UID',
-                user.uid,
-              ),
-              const Divider(height: 1),
-              _buildInfoTile(
-                context,
-                Icons.person_outline,
-                'Display Name',
-                'Not set',
-              ),
-              const Divider(height: 1),
-              _buildInfoTile(
-                context,
-                Icons.phone_outlined,
-                'Phone Number',
-                'Not set',
-              ),
-            ],
+          GlassCard(
+            child: Column(
+              children: [
+                _buildInfoTile(
+                  context,
+                  Icons.email_outlined,
+                  'Email',
+                  user.email ?? 'No Email',
+                ),
+                const Divider(height: 1),
+                _buildInfoTile(
+                  context,
+                  Icons.fingerprint,
+                  'UID',
+                  user.uid,
+                ),
+                const Divider(height: 1),
+                _buildInfoTile(
+                  context,
+                  Icons.person_outline,
+                  'Display Name',
+                  'Not set',
+                ),
+                const Divider(height: 1),
+                _buildInfoTile(
+                  context,
+                  Icons.phone_outlined,
+                  'Phone Number',
+                  'Not set',
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 32),
           _buildActionButtons(context),
@@ -194,32 +195,6 @@ class _ProfileView extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildGlassCard(
-    BuildContext context, {
-    required List<Widget> children,
-  }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.1),
-            ),
-          ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ),
     );
   }
 

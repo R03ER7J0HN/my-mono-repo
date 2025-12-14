@@ -17,7 +17,7 @@ sealed class JobApplicationEntity with _$JobApplicationEntity {
     required DateTime dateApplied,
     String? recruiterName,
     JobLocationEntity? location,
-    double? salaryRequested,
+    int? salaryRequested,
     String? currency, // e.g. "USD", "EUR"
     String? notes,
     @Default([]) List<DateTime> interviewDates,

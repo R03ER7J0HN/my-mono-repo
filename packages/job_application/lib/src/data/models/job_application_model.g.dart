@@ -42,7 +42,7 @@ JobApplicationModel _$JobApplicationModelFromJson(Map<String, dynamic> json) =>
       location: json['location'] == null
           ? null
           : JobLocationModel.fromJson(json['location'] as Map<String, dynamic>),
-      salaryRequested: (json['salaryRequested'] as num?)?.toDouble(),
+      salaryRequested: (json['salaryRequested'] as num?)?.toInt(),
       currency: json['currency'] as String?,
       notes: json['notes'] as String?,
       interviewDates:
@@ -90,6 +90,7 @@ const _$JobPlatformEnumMap = {
   JobPlatform.linkedIn: 'linkedIn',
   JobPlatform.indeed: 'indeed',
   JobPlatform.glassdoor: 'glassdoor',
+  JobPlatform.jobstreet: 'jobstreet',
   JobPlatform.weworkremotely: 'weworkremotely',
   JobPlatform.upwork: 'upwork',
   JobPlatform.other: 'other',

@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_core/flutter_core.dart';
 import 'package:go_router/go_router.dart';
+import 'package:job_application/job_application.dart';
 import 'package:job_application_tracker/application/cubit/cubit.dart';
 import 'package:job_application_tracker/features/auth/forgot_password/forgot_password_screen.dart';
 import 'package:job_application_tracker/features/auth/sign_in/sign_in_screen.dart';
 import 'package:job_application_tracker/features/auth/sign_up/sign_up_screen.dart';
 import 'package:job_application_tracker/features/home/home_screen.dart';
+import 'package:job_application_tracker/features/jobs/job_details/job_entry_screen.dart';
+import 'package:job_application_tracker/features/jobs/job_list/job_list_screen.dart';
 import 'package:job_application_tracker/features/profile/profile_screen.dart';
 import 'package:job_application_tracker/features/splash/splash_screen.dart';
 import 'package:job_application_tracker/router/app_routes.dart';
@@ -57,6 +60,13 @@ class AppRouter {
                 label: 'Home',
               ),
               NavigationItem(
+                routePath: AppRoutes.jobs.path,
+                routeName: AppRoutes.jobs.name,
+                icon: Icons.work_outline,
+                selectedIcon: Icons.work,
+                label: 'Jobs',
+              ),
+              NavigationItem(
                 routePath: AppRoutes.profile.path,
                 routeName: AppRoutes.profile.name,
                 icon: Icons.person_outline,
@@ -74,11 +84,24 @@ class AppRouter {
             builder: (_, _) => const HomeScreen(),
           ),
           GoRoute(
+            path: AppRoutes.jobs.path,
+            name: AppRoutes.jobs.name,
+            builder: (_, _) => const JobListScreen(),
+          ),
+          GoRoute(
             path: AppRoutes.profile.path,
             name: AppRoutes.profile.name,
             builder: (_, _) => const ProfileScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        name: AppRoutes.jobEntry.name,
+        path: AppRoutes.jobEntry.path,
+        builder: (context, state) {
+          final job = state.extra as JobApplicationEntity?;
+          return JobEntryScreen(job: job);
+        },
       ),
     ],
   );
