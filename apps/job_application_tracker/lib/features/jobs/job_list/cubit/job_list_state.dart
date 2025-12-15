@@ -5,8 +5,12 @@ part 'job_list_state.freezed.dart';
 
 @freezed
 sealed class JobListState with _$JobListState {
-  const factory JobListState.initial() = _Initial;
-  const factory JobListState.loading() = _Loading;
-  const factory JobListState.loaded(List<JobApplicationEntity> jobs) = _Loaded;
-  const factory JobListState.error(String message) = _Error;
+  const factory JobListState(
+    List<JobApplicationEntity> jobs, {
+    @Default(false) bool? isLoading,
+    JobApplicationEntity? lastDeleted,
+    String? errorMessage,
+  }) = _JobListState;
+
+  factory JobListState.initial() => const JobListState([], isLoading: true);
 }

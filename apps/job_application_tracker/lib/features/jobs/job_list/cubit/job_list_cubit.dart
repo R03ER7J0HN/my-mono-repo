@@ -8,7 +8,7 @@ import 'package:job_application_tracker/features/jobs/job_list/cubit/job_list_st
 class JobListCubit extends Cubit<JobListState>
     with SafeEmitMixin<JobListState> {
   JobListCubit(this._jobRepository, this._authRepository)
-    : super(const JobListState.initial());
+    : super(JobListState.initial());
 
   final JobApplicationRepository _jobRepository;
   final AuthenticationRepository _authRepository;
@@ -16,20 +16,26 @@ class JobListCubit extends Cubit<JobListState>
   StreamSubscription<List<JobApplicationEntity>>? _jobsSubscription;
 
   Future<void> init() async {
-    safeEmit(const JobListState.loading());
+    safeEmit(state.copyWith(isLoading: true, errorMessage: null));
 
-    // 1. Get User ID
     final userResult = await _authRepository.getSignedInUser();
 
     userResult.fold(
-      onFailure: (failure) => safeEmit(JobListState.error(failure.message)),
+      onFailure: (failure) {
+        safeEmit(
+          state.copyWith(errorMessage: failure.message, isLoading: false),
+        );
+      },
       onSuccess: (user) async {
         if (user == null) {
-          safeEmit(const JobListState.error('User not authenticated'));
-          return;
+          return safeEmit(
+            state.copyWith(
+              errorMessage: 'User not authenticated',
+              isLoading: false,
+            ),
+          );
         }
 
-        // 2. Subscribe to Stream
         await _subscribeToJobs(user.uid);
       },
     );
@@ -41,12 +47,54 @@ class JobListCubit extends Cubit<JobListState>
         .watchJobs(userId)
         .listen(
           (jobs) {
-            safeEmit(JobListState.loaded(jobs));
+            safeEmit(JobListState(jobs, isLoading: false, errorMessage: null));
           },
           onError: (Object error) {
-            safeEmit(JobListState.error(error.toString()));
+            safeEmit(
+              state.copyWith(errorMessage: error.toString(), isLoading: false),
+            );
           },
         );
+  }
+
+  Future<void> restoreJob(JobApplicationEntity job) async {
+    safeEmit(
+      state.copyWith(lastDeleted: null, errorMessage: null, isLoading: true),
+    );
+
+    final result = await _jobRepository.createJob(job);
+
+    result.fold(
+      onFailure: (failure) {
+        safeEmit(
+          state.copyWith(errorMessage: failure.message, isLoading: false),
+        );
+      },
+      onSuccess: (_) {
+        // Stream updates automatically
+      },
+    );
+  }
+
+  Future<void> deleteJob(JobApplicationEntity job) async {
+    safeEmit(state.copyWith(errorMessage: null, isLoading: true));
+
+    final result = await _jobRepository.deleteJob(
+      userId: job.userId,
+      jobId: job.id,
+    );
+
+    result.fold(
+      onFailure: (failure) {
+        safeEmit(
+          state.copyWith(errorMessage: failure.message, isLoading: false),
+        );
+      },
+      onSuccess: (_) {
+        safeEmit(state.copyWith(lastDeleted: job));
+        safeEmit(state.copyWith(lastDeleted: null, isLoading: false));
+      },
+    );
   }
 
   @override

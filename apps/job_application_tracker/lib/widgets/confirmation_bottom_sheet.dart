@@ -18,23 +18,23 @@ class ConfirmationBottomSheet extends StatelessWidget {
   final Widget cancelWidget;
   final bool isDestructive;
 
-  static Future<void> show(
+  static Future<T?> show<T>(
     BuildContext context, {
     required String title,
     required String message,
-    required VoidCallback onConfirm,
+    required T Function() onConfirm,
     Widget confirmWidget = const Text('Confirm'),
     Widget cancelWidget = const Text('Cancel'),
     bool isDestructive = false,
     bool useRootNavigator = true,
-  }) => showModalBottomSheet<void>(
+  }) => showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
     useRootNavigator: useRootNavigator,
     builder: (context) => ConfirmationBottomSheet(
       title: title,
       message: message,
-      onConfirm: onConfirm,
+      onConfirm: () => onConfirm.call(),
       confirmWidget: confirmWidget,
       cancelWidget: cancelWidget,
       isDestructive: isDestructive,

@@ -14,30 +14,76 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JobListState {
 
-
+ List<JobApplicationEntity> get jobs; bool? get isLoading; JobApplicationEntity? get lastDeleted; String? get errorMessage;
+/// Create a copy of JobListState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$JobListStateCopyWith<JobListState> get copyWith => _$JobListStateCopyWithImpl<JobListState>(this as JobListState, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobListState);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobListState&&const DeepCollectionEquality().equals(other.jobs, jobs)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastDeleted, lastDeleted) || other.lastDeleted == lastDeleted)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(jobs),isLoading,lastDeleted,errorMessage);
 
 @override
 String toString() {
-  return 'JobListState()';
+  return 'JobListState(jobs: $jobs, isLoading: $isLoading, lastDeleted: $lastDeleted, errorMessage: $errorMessage)';
 }
 
 
 }
 
 /// @nodoc
-class $JobListStateCopyWith<$Res>  {
-$JobListStateCopyWith(JobListState _, $Res Function(JobListState) __);
+abstract mixin class $JobListStateCopyWith<$Res>  {
+  factory $JobListStateCopyWith(JobListState value, $Res Function(JobListState) _then) = _$JobListStateCopyWithImpl;
+@useResult
+$Res call({
+ List<JobApplicationEntity> jobs, bool? isLoading, JobApplicationEntity? lastDeleted, String? errorMessage
+});
+
+
+$JobApplicationEntityCopyWith<$Res>? get lastDeleted;
+
+}
+/// @nodoc
+class _$JobListStateCopyWithImpl<$Res>
+    implements $JobListStateCopyWith<$Res> {
+  _$JobListStateCopyWithImpl(this._self, this._then);
+
+  final JobListState _self;
+  final $Res Function(JobListState) _then;
+
+/// Create a copy of JobListState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? jobs = null,Object? isLoading = freezed,Object? lastDeleted = freezed,Object? errorMessage = freezed,}) {
+  return _then(_self.copyWith(
+jobs: null == jobs ? _self.jobs : jobs // ignore: cast_nullable_to_non_nullable
+as List<JobApplicationEntity>,isLoading: freezed == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
+as bool?,lastDeleted: freezed == lastDeleted ? _self.lastDeleted : lastDeleted // ignore: cast_nullable_to_non_nullable
+as JobApplicationEntity?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+/// Create a copy of JobListState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$JobApplicationEntityCopyWith<$Res>? get lastDeleted {
+    if (_self.lastDeleted == null) {
+    return null;
+  }
+
+  return $JobApplicationEntityCopyWith<$Res>(_self.lastDeleted!, (value) {
+    return _then(_self.copyWith(lastDeleted: value));
+  });
+}
 }
 
 
@@ -55,14 +101,11 @@ extension JobListStatePatterns on JobListState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _JobListState value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Initial() when initial != null:
-return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _Loaded() when loaded != null:
-return loaded(_that);case _Error() when error != null:
-return error(_that);case _:
+case _JobListState() when $default != null:
+return $default(_that);case _:
   return orElse();
 
 }
@@ -80,14 +123,11 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _JobListState value)  $default,){
 final _that = this;
 switch (_that) {
-case _Initial():
-return initial(_that);case _Loading():
-return loading(_that);case _Loaded():
-return loaded(_that);case _Error():
-return error(_that);}
+case _JobListState():
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -101,14 +141,11 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _JobListState value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Initial() when initial != null:
-return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _Loaded() when loaded != null:
-return loaded(_that);case _Error() when error != null:
-return error(_that);case _:
+case _JobListState() when $default != null:
+return $default(_that);case _:
   return null;
 
 }
@@ -125,13 +162,10 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<JobApplicationEntity> jobs)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<JobApplicationEntity> jobs,  bool? isLoading,  JobApplicationEntity? lastDeleted,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Initial() when initial != null:
-return initial();case _Loading() when loading != null:
-return loading();case _Loaded() when loaded != null:
-return loaded(_that.jobs);case _Error() when error != null:
-return error(_that.message);case _:
+case _JobListState() when $default != null:
+return $default(_that.jobs,_that.isLoading,_that.lastDeleted,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -149,13 +183,10 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<JobApplicationEntity> jobs)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<JobApplicationEntity> jobs,  bool? isLoading,  JobApplicationEntity? lastDeleted,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
-case _Initial():
-return initial();case _Loading():
-return loading();case _Loaded():
-return loaded(_that.jobs);case _Error():
-return error(_that.message);}
+case _JobListState():
+return $default(_that.jobs,_that.isLoading,_that.lastDeleted,_that.errorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +200,10 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<JobApplicationEntity> jobs)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<JobApplicationEntity> jobs,  bool? isLoading,  JobApplicationEntity? lastDeleted,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
-case _Initial() when initial != null:
-return initial();case _Loading() when loading != null:
-return loading();case _Loaded() when loaded != null:
-return loaded(_that.jobs);case _Error() when error != null:
-return error(_that.message);case _:
+case _JobListState() when $default != null:
+return $default(_that.jobs,_that.isLoading,_that.lastDeleted,_that.errorMessage);case _:
   return null;
 
 }
@@ -186,203 +214,91 @@ return error(_that.message);case _:
 /// @nodoc
 
 
-class _Initial implements JobListState {
-  const _Initial();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'JobListState.initial()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _Loading implements JobListState {
-  const _Loading();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'JobListState.loading()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _Loaded implements JobListState {
-  const _Loaded(final  List<JobApplicationEntity> jobs): _jobs = jobs;
+class _JobListState implements JobListState {
+  const _JobListState(final  List<JobApplicationEntity> jobs, {this.isLoading = false, this.lastDeleted, this.errorMessage}): _jobs = jobs;
   
 
  final  List<JobApplicationEntity> _jobs;
- List<JobApplicationEntity> get jobs {
+@override List<JobApplicationEntity> get jobs {
   if (_jobs is EqualUnmodifiableListView) return _jobs;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_jobs);
 }
 
+@override@JsonKey() final  bool? isLoading;
+@override final  JobApplicationEntity? lastDeleted;
+@override final  String? errorMessage;
 
 /// Create a copy of JobListState
 /// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
+@override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+_$JobListStateCopyWith<_JobListState> get copyWith => __$JobListStateCopyWithImpl<_JobListState>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._jobs, _jobs));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobListState&&const DeepCollectionEquality().equals(other._jobs, _jobs)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastDeleted, lastDeleted) || other.lastDeleted == lastDeleted)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_jobs));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_jobs),isLoading,lastDeleted,errorMessage);
 
 @override
 String toString() {
-  return 'JobListState.loaded(jobs: $jobs)';
+  return 'JobListState(jobs: $jobs, isLoading: $isLoading, lastDeleted: $lastDeleted, errorMessage: $errorMessage)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$LoadedCopyWith<$Res> implements $JobListStateCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
-@useResult
+abstract mixin class _$JobListStateCopyWith<$Res> implements $JobListStateCopyWith<$Res> {
+  factory _$JobListStateCopyWith(_JobListState value, $Res Function(_JobListState) _then) = __$JobListStateCopyWithImpl;
+@override @useResult
 $Res call({
- List<JobApplicationEntity> jobs
+ List<JobApplicationEntity> jobs, bool? isLoading, JobApplicationEntity? lastDeleted, String? errorMessage
 });
 
 
-
+@override $JobApplicationEntityCopyWith<$Res>? get lastDeleted;
 
 }
 /// @nodoc
-class __$LoadedCopyWithImpl<$Res>
-    implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(this._self, this._then);
+class __$JobListStateCopyWithImpl<$Res>
+    implements _$JobListStateCopyWith<$Res> {
+  __$JobListStateCopyWithImpl(this._self, this._then);
 
-  final _Loaded _self;
-  final $Res Function(_Loaded) _then;
+  final _JobListState _self;
+  final $Res Function(_JobListState) _then;
 
 /// Create a copy of JobListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? jobs = null,}) {
-  return _then(_Loaded(
+@override @pragma('vm:prefer-inline') $Res call({Object? jobs = null,Object? isLoading = freezed,Object? lastDeleted = freezed,Object? errorMessage = freezed,}) {
+  return _then(_JobListState(
 null == jobs ? _self._jobs : jobs // ignore: cast_nullable_to_non_nullable
-as List<JobApplicationEntity>,
+as List<JobApplicationEntity>,isLoading: freezed == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
+as bool?,lastDeleted: freezed == lastDeleted ? _self.lastDeleted : lastDeleted // ignore: cast_nullable_to_non_nullable
+as JobApplicationEntity?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
-
-}
-
-/// @nodoc
-
-
-class _Error implements JobListState {
-  const _Error(this.message);
-  
-
- final  String message;
-
 /// Create a copy of JobListState
 /// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
+@override
 @pragma('vm:prefer-inline')
-_$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
+$JobApplicationEntityCopyWith<$Res>? get lastDeleted {
+    if (_self.lastDeleted == null) {
+    return null;
+  }
 
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+  return $JobApplicationEntityCopyWith<$Res>(_self.lastDeleted!, (value) {
+    return _then(_self.copyWith(lastDeleted: value));
+  });
 }
-
-
-@override
-int get hashCode => Object.hash(runtimeType,message);
-
-@override
-String toString() {
-  return 'JobListState.error(message: $message)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$ErrorCopyWith<$Res> implements $JobListStateCopyWith<$Res> {
-  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
-@useResult
-$Res call({
- String message
-});
-
-
-
-
-}
-/// @nodoc
-class __$ErrorCopyWithImpl<$Res>
-    implements _$ErrorCopyWith<$Res> {
-  __$ErrorCopyWithImpl(this._self, this._then);
-
-  final _Error _self;
-  final $Res Function(_Error) _then;
-
-/// Create a copy of JobListState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(_Error(
-null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
 }
 
 // dart format on
