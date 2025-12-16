@@ -137,3 +137,4 @@ firestore-debug.log
 
 # Misc
 .sass-cache/
+devtools_options.yaml
