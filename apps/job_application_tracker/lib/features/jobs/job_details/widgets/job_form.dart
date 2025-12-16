@@ -127,101 +127,113 @@ class _JobFormState extends State<JobForm> {
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      padding: const EdgeInsets.all(24),
-      child: FormBuilder(
-        key: _formKey,
-        initialValue: _initialValues,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildSectionTitle('Basic Information'),
-            const SizedBox(height: 16),
-            AppTextField(
-              name: JobFormKeys.companyName,
-              label: 'Company Name',
-              icon: Icons.business,
-              maxLines: 2,
-              validator: FormBuilderValidators.required(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: SingleChildScrollView(
+              child: GlassCard(
+                padding: const EdgeInsets.all(24),
+                child: FormBuilder(
+                  key: _formKey,
+                  initialValue: _initialValues,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildSectionTitle('Basic Information'),
+                      const SizedBox(height: 16),
+                      AppTextField(
+                        name: JobFormKeys.companyName,
+                        label: 'Company Name',
+                        icon: Icons.business,
+                        maxLines: 2,
+                        validator: FormBuilderValidators.required(),
+                      ),
+                      const SizedBox(height: 16),
+                      AppTextField(
+                        name: JobFormKeys.jobTitle,
+                        label: 'Job Title',
+                        icon: Icons.work,
+                        validator: FormBuilderValidators.required(),
+                      ),
+                      const SizedBox(height: 16),
+                      AppTextField(
+                        name: JobFormKeys.jobLink,
+                        label: 'Job Link',
+                        icon: Icons.link,
+                        onChanged: _onJobLinkChanged,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.url(),
+                        ]),
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSectionTitle('Job Details'),
+                      const SizedBox(height: 16),
+                      AppDropdown<JobPlatform>(
+                        name: JobFormKeys.platform,
+                        label: 'Platform',
+                        icon: Icons.public,
+                        items: JobPlatform.values,
+                        itemBuilder: (platform) => platform.displayName,
+                      ),
+                      const SizedBox(height: 16),
+                      AppDropdown<WorkSetup>(
+                        name: JobFormKeys.workSetup,
+                        label: 'Work Setup',
+                        icon: Icons.laptop,
+                        items: WorkSetup.values,
+                        itemBuilder: (setup) => setup.name.capitalize,
+                      ),
+                      const SizedBox(height: 16),
+                      AppDropdown<EmploymentType>(
+                        name: JobFormKeys.employmentType,
+                        label: 'Employment Type',
+                        icon: Icons.badge,
+                        items: EmploymentType.values,
+                        itemBuilder: (type) => type.name.toTitleCase,
+                      ),
+                      const SizedBox(height: 16),
+                      AppDropdown<JobStatus>(
+                        name: JobFormKeys.status,
+                        label: 'Status',
+                        icon: Icons.flag,
+                        items: JobStatus.values,
+                        itemBuilder: (status) => status.name.capitalize,
+                      ),
+                      const SizedBox(height: 16),
+                      const AppDatePicker(
+                        name: JobFormKeys.dateApplied,
+                        label: 'Date Applied',
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSectionTitle('Additional Information'),
+                      const SizedBox(height: 16),
+                      const AppTextField(
+                        name: JobFormKeys.recruiterName,
+                        label: 'Recruiter Name (Optional)',
+                        icon: Icons.person,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildCurrencyField(),
+                      const SizedBox(height: 16),
+                      const AppTextField(
+                        name: JobFormKeys.notes,
+                        label: 'Notes (Optional)',
+                        icon: Icons.note,
+                        maxLines: 4,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            AppTextField(
-              name: JobFormKeys.jobTitle,
-              label: 'Job Title',
-              icon: Icons.work,
-              validator: FormBuilderValidators.required(),
-            ),
-            const SizedBox(height: 16),
-            AppTextField(
-              name: JobFormKeys.jobLink,
-              label: 'Job Link',
-              icon: Icons.link,
-              onChanged: _onJobLinkChanged,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.url(),
-              ]),
-            ),
-            const SizedBox(height: 24),
-            _buildSectionTitle('Job Details'),
-            const SizedBox(height: 16),
-            AppDropdown<JobPlatform>(
-              name: JobFormKeys.platform,
-              label: 'Platform',
-              icon: Icons.public,
-              items: JobPlatform.values,
-              itemBuilder: (platform) => platform.displayName,
-            ),
-            const SizedBox(height: 16),
-            AppDropdown<WorkSetup>(
-              name: JobFormKeys.workSetup,
-              label: 'Work Setup',
-              icon: Icons.laptop,
-              items: WorkSetup.values,
-              itemBuilder: (setup) => setup.name.capitalize,
-            ),
-            const SizedBox(height: 16),
-            AppDropdown<EmploymentType>(
-              name: JobFormKeys.employmentType,
-              label: 'Employment Type',
-              icon: Icons.badge,
-              items: EmploymentType.values,
-              itemBuilder: (type) => type.name.toTitleCase,
-            ),
-            const SizedBox(height: 16),
-            AppDropdown<JobStatus>(
-              name: JobFormKeys.status,
-              label: 'Status',
-              icon: Icons.flag,
-              items: JobStatus.values,
-              itemBuilder: (status) => status.name.capitalize,
-            ),
-            const SizedBox(height: 16),
-            const AppDatePicker(
-              name: JobFormKeys.dateApplied,
-              label: 'Date Applied',
-            ),
-            const SizedBox(height: 24),
-            _buildSectionTitle('Additional Information'),
-            const SizedBox(height: 16),
-            const AppTextField(
-              name: JobFormKeys.recruiterName,
-              label: 'Recruiter Name (Optional)',
-              icon: Icons.person,
-            ),
-            const SizedBox(height: 16),
-            _buildCurrencyField(),
-            const SizedBox(height: 16),
-            const AppTextField(
-              name: JobFormKeys.notes,
-              label: 'Notes (Optional)',
-              icon: Icons.note,
-              maxLines: 4,
-            ),
-            const SizedBox(height: 32),
-            _buildSubmitButton(context),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          _buildSubmitButton(context),
+        ],
       ),
     );
   }
