@@ -11,6 +11,7 @@ import 'package:job_application_tracker/features/profile/widgets/reauth_dialog.d
 import 'package:job_application_tracker/widgets/background_decoration.dart';
 import 'package:job_application_tracker/widgets/confirmation_bottom_sheet.dart';
 import 'package:job_application_tracker/widgets/glass_card.dart';
+import 'package:job_application_tracker/widgets/navigation/scaffold_with_nav_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -19,9 +20,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final cubit = ProfileCubit(
-          GetIt.I<AuthenticationRepository>(),
-        );
+        final cubit = ProfileCubit(GetIt.I<AuthenticationRepository>());
         unawaited(cubit.loadProfile());
 
         return cubit;
@@ -50,10 +49,7 @@ class _ProfileView extends StatelessWidget {
             listener: (context, state) {
               state.whenOrNull(
                 failure: (message) {
-                  context.showSnackBar(
-                    message,
-                    type: SnackBarType.error,
-                  );
+                  context.showSnackBar(message, type: SnackBarType.error);
                 },
                 loggedOut: context.read<AppCubit>().logout,
                 accountDeleted: () {
@@ -70,9 +66,7 @@ class _ProfileView extends StatelessWidget {
                   );
 
                   if (password != null && context.mounted) {
-                    unawaited(
-                      context.cubit.reauthenticateAndDelete(password),
-                    );
+                    unawaited(context.cubit.reauthenticateAndDelete(password));
                   }
                 },
               );
@@ -92,7 +86,7 @@ class _ProfileView extends StatelessWidget {
 
   Widget _buildProfileContent(BuildContext context, UserEntity user) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           const SizedBox(height: 20),
@@ -108,12 +102,7 @@ class _ProfileView extends StatelessWidget {
                   user.email ?? 'No Email',
                 ),
                 const Divider(height: 1),
-                _buildInfoTile(
-                  context,
-                  Icons.fingerprint,
-                  'UID',
-                  user.uid,
-                ),
+                _buildInfoTile(context, Icons.fingerprint, 'UID', user.uid),
                 const Divider(height: 1),
                 _buildInfoTile(
                   context,
@@ -133,7 +122,7 @@ class _ProfileView extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           _buildActionButtons(context),
-          const SizedBox(height: 40), // Bottom padding
+          SizedBox(height: context.navBarPadding),
         ],
       ),
     );
@@ -164,19 +153,13 @@ class _ProfileView extends StatelessWidget {
           child: CircleAvatar(
             radius: 50,
             backgroundColor: colorScheme.surface,
-            child: Icon(
-              Icons.person,
-              size: 50,
-              color: colorScheme.primary,
-            ),
+            child: Icon(Icons.person, size: 50, color: colorScheme.primary),
           ),
         ),
         const SizedBox(height: 16),
         Text(
           user.email ?? 'User',
-          style: textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 4),
@@ -238,9 +221,9 @@ class _ProfileView extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],

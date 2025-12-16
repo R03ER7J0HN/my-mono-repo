@@ -6,11 +6,13 @@ class AppDatePicker extends StatelessWidget {
   const AppDatePicker({
     required this.name,
     required this.label,
+    this.lastDate,
     super.key,
   });
 
   final String name;
   final String label;
+  final DateTime? lastDate;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class AppDatePicker extends StatelessWidget {
         filled: true,
         fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       ),
+      lastDate: lastDate,
       validator: FormBuilderValidators.required(),
     );
   }

@@ -72,15 +72,12 @@ class _JobEntryView extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: JobForm(
-                    job: job,
-                    isLoading: isLoading,
-                    onSubmit: (job) {
-                      unawaited(context.read<JobDetailsCubit>().submitJob(job));
-                    },
-                  ),
+                child: JobForm(
+                  job: job,
+                  isLoading: isLoading,
+                  onSubmit: (job) {
+                    unawaited(context.read<JobDetailsCubit>().submitJob(job));
+                  },
                 ),
               );
             },

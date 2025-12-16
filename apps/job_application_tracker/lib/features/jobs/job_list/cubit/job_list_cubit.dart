@@ -20,7 +20,7 @@ class JobListCubit extends Cubit<JobListState>
 
     final userResult = await _authRepository.getSignedInUser();
 
-    userResult.fold(
+    await userResult.fold(
       onFailure: (failure) {
         safeEmit(
           state.copyWith(errorMessage: failure.message, isLoading: false),
@@ -47,7 +47,9 @@ class JobListCubit extends Cubit<JobListState>
         .watchJobs(userId)
         .listen(
           (jobs) {
-            safeEmit(JobListState(jobs, isLoading: false, errorMessage: null));
+            safeEmit(
+              state.copyWith(jobs: jobs, isLoading: false, errorMessage: null),
+            );
           },
           onError: (Object error) {
             safeEmit(

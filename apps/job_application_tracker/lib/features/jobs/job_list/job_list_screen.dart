@@ -11,6 +11,7 @@ import 'package:job_application_tracker/features/jobs/job_list/widgets/job_list_
 import 'package:job_application_tracker/features/jobs/job_list/widgets/job_list_header.dart';
 import 'package:job_application_tracker/router/app_navigator.dart';
 import 'package:job_application_tracker/widgets/background_decoration.dart';
+import 'package:job_application_tracker/widgets/navigation/scaffold_with_nav_bar.dart';
 
 class JobListScreen extends StatelessWidget {
   const JobListScreen({super.key});
@@ -29,78 +30,71 @@ class JobListScreen extends StatelessWidget {
       },
       child: Scaffold(
         body: BackgroundDecoration(
-          child: SafeArea(
-            child: BlocConsumer<JobListCubit, JobListState>(
-              listener: (context, state) {
-                final errorMessage = state.errorMessage;
-                final lastDeleted = state.lastDeleted;
+          child: BlocConsumer<JobListCubit, JobListState>(
+            listener: (context, state) {
+              final errorMessage = state.errorMessage;
+              final lastDeleted = state.lastDeleted;
 
-                if (errorMessage != null) {
-                  context.showSnackBar(errorMessage, type: SnackBarType.error);
-                }
+              if (errorMessage != null) {
+                context.showSnackBar(errorMessage, type: SnackBarType.error);
+              }
 
-                if (lastDeleted != null) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
+              if (lastDeleted != null) {
+                ScaffoldMessenger.of(context).clearSnackBars();
 
-                  context.showSnackBar(
-                    'Job application deleted',
-                    duration: Durations.extralong4,
-                    action: SnackBarAction(
-                      label: 'Undo',
-                      onPressed: () {
-                        context.cubit.restoreJob(lastDeleted);
-                      },
-                    ),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state.isLoading ?? false) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final jobs = state.jobs;
-                final isEmpty = state.jobs.isEmpty;
-
-                return Stack(
-                  children: [
-                    CustomScrollView(
-                      physics: isEmpty
-                          ? const NeverScrollableScrollPhysics()
-                          : null,
-                      slivers: [
-                        const SliverToBoxAdapter(child: JobListHeader()),
-                        if (!isEmpty) ...[
-                          SliverPadding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            sliver: SliverList.separated(
-                              itemCount: jobs.length,
-                              itemBuilder: (_, index) {
-                                return DismissibleJobItem(
-                                  job: jobs[index],
-                                  onDismissed: (job) {
-                                    context.cubit.deleteJob(job);
-                                  },
-                                );
-                              },
-                              separatorBuilder: (_, _) {
-                                return const SizedBox(height: 12);
-                              },
-                            ),
-                          ),
-                          const SliverPadding(
-                            padding: EdgeInsets.only(
-                              bottom: kBottomNavigationBarHeight,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    if (isEmpty) const JobListEmpty(),
-                  ],
+                context.showSnackBar(
+                  'Job application deleted',
+                  duration: Durations.extralong4,
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    onPressed: () {
+                      unawaited(context.cubit.restoreJob(lastDeleted));
+                    },
+                  ),
                 );
-              },
-            ),
+              }
+            },
+            builder: (context, state) {
+              if (state.isLoading ?? false) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final jobs = state.jobs;
+              final isEmpty = state.jobs.isEmpty;
+
+              return Stack(
+                children: [
+                  CustomScrollView(
+                    physics: isEmpty
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
+                    slivers: [
+                      const SliverToBoxAdapter(child: JobListHeader()),
+                      if (!isEmpty) ...[
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          sliver: SliverList.separated(
+                            itemCount: jobs.length,
+                            itemBuilder: (_, index) {
+                              return DismissibleJobItem(
+                                job: jobs[index],
+                                onDismissed: (job) {
+                                  unawaited(context.cubit.deleteJob(job));
+                                },
+                              );
+                            },
+                            separatorBuilder: (_, _) {
+                              return const SizedBox(height: 12);
+                            },
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (isEmpty) const JobListEmpty(),
+                ],
+              );
+            },
           ),
         ),
         floatingActionButton: _buildFloatingActionButton(context),
@@ -110,10 +104,7 @@ class JobListScreen extends StatelessWidget {
 
   Widget _buildFloatingActionButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: kBottomNavigationBarHeight + 30,
-        right: 10,
-      ),
+      padding: EdgeInsets.only(bottom: context.navBarPadding),
       child: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
         label: const Text('New Application'),

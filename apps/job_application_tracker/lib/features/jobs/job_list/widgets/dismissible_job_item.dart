@@ -14,7 +14,7 @@ class DismissibleJobItem extends StatefulWidget {
 }
 
 class _DismissibleJobItemState extends State<DismissibleJobItem> {
-  double _progress = 0.0;
+  double _progress = 0;
 
   @override
   Widget build(BuildContext context) {

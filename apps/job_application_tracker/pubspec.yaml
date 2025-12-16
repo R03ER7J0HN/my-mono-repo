@@ -9,6 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  add_2_calendar: ^3.0.1
   authentication:
     path: ../../packages/authentication
   currency_picker: ^2.0.21
@@ -32,8 +33,10 @@ dependencies:
   intl: any
   job_application:
     path: ../../packages/job_application
+  json_annotation: ^4.9.0
   notification:
     path: ../../packages/notification
+  percent_indicator: ^4.2.5
   shimmer: ^3.0.0
 
 dev_dependencies:
@@ -42,6 +45,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^3.2.3
+  json_serializable: ^6.11.2
 
 flutter:
   uses-material-design: true
