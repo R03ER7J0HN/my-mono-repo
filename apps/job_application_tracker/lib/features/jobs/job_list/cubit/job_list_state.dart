@@ -8,7 +8,6 @@ sealed class JobListState with _$JobListState {
   const factory JobListState(
     List<JobApplicationEntity> jobs, {
     @Default(false) bool? isLoading,
-    JobApplicationEntity? lastDeleted,
     String? errorMessage,
   }) = _JobListState;
 

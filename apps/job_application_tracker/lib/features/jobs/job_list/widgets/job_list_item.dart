@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:job_application/job_application.dart';
 import 'package:job_application_tracker/features/jobs/job_list/widgets/status_chip.dart';
-import 'package:job_application_tracker/router/app_routes.dart';
 import 'package:job_application_tracker/widgets/glass_card.dart';
 
 class JobListItem extends StatelessWidget {
@@ -13,58 +11,51 @@ class JobListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.pushNamed(
-        AppRoutes.jobEntry.name,
-        extra: job,
-      ),
-      child: GlassCard(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCompanyLogo(context),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        job.jobTitle,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+    return GlassCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCompanyLogo(context),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      job.jobTitle,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        job.companyName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      job.companyName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                _buildDate(context),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                StatusChip(status: job.status),
-                const Spacer(),
-                if (job.platform != JobPlatform.other)
-                  _buildPlatformBadge(context),
-              ],
-            ),
-          ],
-        ),
+              ),
+              _buildDate(context),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              StatusChip(status: job.status),
+              const Spacer(),
+              if (job.platform != JobPlatform.other)
+                _buildPlatformBadge(context),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:job_application/job_application.dart';
@@ -18,7 +20,7 @@ class AppNavigator {
   static void goToForgotPassword(BuildContext context) =>
       context.goNamed(AppRoutes.forgotPassword.name);
 
-  static Future<T?> pushJobEntry<T>(
+  static FutureOr<T?> pushJobEntry<T>(
     BuildContext context, {
     JobApplicationEntity? job,
   }) => context.pushNamed(AppRoutes.jobEntry.name, extra: job);

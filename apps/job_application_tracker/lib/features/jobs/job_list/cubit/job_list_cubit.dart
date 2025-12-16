@@ -59,25 +59,6 @@ class JobListCubit extends Cubit<JobListState>
         );
   }
 
-  Future<void> restoreJob(JobApplicationEntity job) async {
-    safeEmit(
-      state.copyWith(lastDeleted: null, errorMessage: null, isLoading: true),
-    );
-
-    final result = await _jobRepository.createJob(job);
-
-    result.fold(
-      onFailure: (failure) {
-        safeEmit(
-          state.copyWith(errorMessage: failure.message, isLoading: false),
-        );
-      },
-      onSuccess: (_) {
-        // Stream updates automatically
-      },
-    );
-  }
-
   Future<void> deleteJob(JobApplicationEntity job) async {
     safeEmit(state.copyWith(errorMessage: null, isLoading: true));
 
@@ -92,10 +73,7 @@ class JobListCubit extends Cubit<JobListState>
           state.copyWith(errorMessage: failure.message, isLoading: false),
         );
       },
-      onSuccess: (_) {
-        safeEmit(state.copyWith(lastDeleted: job));
-        safeEmit(state.copyWith(lastDeleted: null, isLoading: false));
-      },
+      onSuccess: (_) {},
     );
   }
 

@@ -28,77 +28,99 @@ class JobListScreen extends StatelessWidget {
 
         return cubit;
       },
-      child: Scaffold(
-        body: BackgroundDecoration(
-          child: BlocConsumer<JobListCubit, JobListState>(
-            listener: (context, state) {
-              final errorMessage = state.errorMessage;
-              final lastDeleted = state.lastDeleted;
+      child: const _JobListView(),
+    );
+  }
+}
 
-              if (errorMessage != null) {
-                context.showSnackBar(errorMessage, type: SnackBarType.error);
-              }
+class _JobListView extends StatefulWidget {
+  const _JobListView();
 
-              if (lastDeleted != null) {
-                ScaffoldMessenger.of(context).clearSnackBars();
+  @override
+  State<_JobListView> createState() => _JobListViewState();
+}
 
-                context.showSnackBar(
-                  'Job application deleted',
-                  duration: Durations.extralong4,
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    onPressed: () {
-                      unawaited(context.cubit.restoreJob(lastDeleted));
-                    },
-                  ),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state.isLoading ?? false) {
-                return const Center(child: CircularProgressIndicator());
-              }
+class _JobListViewState extends State<_JobListView> {
+  final _swipeController = SwipeToDeleteController();
 
-              final jobs = state.jobs;
-              final isEmpty = state.jobs.isEmpty;
+  @override
+  void dispose() {
+    _swipeController.dispose();
+    super.dispose();
+  }
 
-              return Stack(
-                children: [
-                  CustomScrollView(
-                    physics: isEmpty
-                        ? const NeverScrollableScrollPhysics()
-                        : null,
-                    slivers: [
-                      const SliverToBoxAdapter(child: JobListHeader()),
-                      if (!isEmpty) ...[
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          sliver: SliverList.separated(
-                            itemCount: jobs.length,
-                            itemBuilder: (_, index) {
-                              return DismissibleJobItem(
-                                job: jobs[index],
-                                onDismissed: (job) {
-                                  unawaited(context.cubit.deleteJob(job));
-                                },
-                              );
-                            },
-                            separatorBuilder: (_, _) {
-                              return const SizedBox(height: 12);
-                            },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BackgroundDecoration(
+        child: BlocConsumer<JobListCubit, JobListState>(
+          listener: (context, state) {
+            final errorMessage = state.errorMessage;
+
+            if (errorMessage != null) {
+              context.showSnackBar(errorMessage, type: SnackBarType.error);
+            }
+          },
+          builder: (context, state) {
+            if (state.isLoading ?? false) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final jobs = state.jobs;
+            final isEmpty = state.jobs.isEmpty;
+
+            return SafeArea(
+              child: GestureDetector(
+                onTap: _swipeController.closeAll,
+                behavior: HitTestBehavior.translucent,
+                child: Stack(
+                  children: [
+                    CustomScrollView(
+                      physics: isEmpty
+                          ? const NeverScrollableScrollPhysics()
+                          : null,
+                      slivers: [
+                        const SliverToBoxAdapter(child: JobListHeader()),
+                        if (!isEmpty) ...[
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            sliver: SliverList.separated(
+                              itemCount: jobs.length,
+                              itemBuilder: (_, index) {
+                                final job = jobs[index];
+                                return DismissibleJobItem(
+                                  job: job,
+                                  controller: _swipeController,
+                                  onTap: () {
+                                    unawaited(
+                                      AppNavigator.pushJobEntry(
+                                        context,
+                                        job: job,
+                                      ),
+                                    );
+                                  },
+                                  onDismissed: (job) {
+                                    unawaited(context.cubit.deleteJob(job));
+                                  },
+                                );
+                              },
+                              separatorBuilder: (_, _) {
+                                return const SizedBox(height: 12);
+                              },
+                            ),
                           ),
-                        ),
+                        ],
                       ],
-                    ],
-                  ),
-                  if (isEmpty) const JobListEmpty(),
-                ],
-              );
-            },
-          ),
+                    ),
+                    if (isEmpty) const JobListEmpty(),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-        floatingActionButton: _buildFloatingActionButton(context),
       ),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -109,7 +131,7 @@ class JobListScreen extends StatelessWidget {
         icon: const Icon(Icons.add),
         label: const Text('New Application'),
         onPressed: () {
-          unawaited(AppNavigator.pushJobEntry<void>(context));
+          unawaited(AppNavigator.pushJobEntry(context));
         },
       ),
     );
