@@ -14,7 +14,8 @@ import 'package:job_application_tracker/features/jobs/job_list/job_list_screen.d
 import 'package:job_application_tracker/features/profile/profile_screen.dart';
 import 'package:job_application_tracker/features/splash/splash_screen.dart';
 import 'package:job_application_tracker/router/app_routes.dart';
-import 'package:job_application_tracker/widgets/scaffold_with_nav_bar.dart';
+import 'package:job_application_tracker/widgets/navigation/navigation_item.dart';
+import 'package:job_application_tracker/widgets/navigation/scaffold_with_nav_bar.dart';
 
 class AppRouter {
   AppRouter(this.appCubit);
