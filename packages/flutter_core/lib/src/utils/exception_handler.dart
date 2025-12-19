@@ -82,9 +82,3 @@ mixin ExceptionHandler {
     };
   }
 }
-
-/// Backward-compatible alias for [ExceptionHandler].
-/// Prefer using [ExceptionHandler] for new code.
-///
-/// @Deprecated('Use ExceptionHandler instead')
-typedef ApiResponseHandler = ExceptionHandler;
