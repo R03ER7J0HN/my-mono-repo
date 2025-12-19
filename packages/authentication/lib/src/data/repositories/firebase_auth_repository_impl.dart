@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_core/flutter_core.dart';
 
 class FirebaseAuthRepositoryImpl
-    with FirebaseExceptionHandler
+    with ExceptionHandler, FirebaseAuthExceptionHandler
     implements AuthenticationRepository {
   const FirebaseAuthRepositoryImpl(
     this._firebaseAuth,
@@ -25,7 +25,7 @@ class FirebaseAuthRepositoryImpl
       return Result.failure(FirebaseFailure.notLoggedIn());
     }
 
-    return handleFirebaseException(
+    return handleException(
       currentUser.delete(),
       onSuccess: (response) => _localDataSource.clearCache(),
     );
@@ -47,7 +47,7 @@ class FirebaseAuthRepositoryImpl
     } on Exception catch (e) {
       final cachedUser = await _localDataSource.getLastSignedInUser();
       if (cachedUser != null) {
-        return Result.success(cachedUser);
+        return Result.success(cachedUser.toEntity());
       }
       return Result.failure(FirebaseFailure(e.toString()));
     }
@@ -55,7 +55,7 @@ class FirebaseAuthRepositoryImpl
 
   @override
   FutureResult<void> logOut() {
-    return handleFirebaseException(
+    return handleException(
       _firebaseAuth.signOut(),
       onSuccess: (response) async {
         await _localDataSource.clearCache();
@@ -69,7 +69,7 @@ class FirebaseAuthRepositoryImpl
     required String email,
     required String password,
   }) {
-    return handleFirebaseException(
+    return handleException(
       _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -102,7 +102,7 @@ class FirebaseAuthRepositoryImpl
       password: password,
     );
 
-    return handleFirebaseException(
+    return handleException(
       currentUser.reauthenticateWithCredential(credential),
       onSuccess: (_) {},
     );
@@ -118,7 +118,7 @@ class FirebaseAuthRepositoryImpl
     required String email,
     required String password,
   }) {
-    return handleFirebaseException(
+    return handleException(
       _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -137,7 +137,7 @@ class FirebaseAuthRepositoryImpl
 
   @override
   FutureResult<void> sendPasswordResetEmail({required String email}) {
-    return handleFirebaseException(
+    return handleException(
       _firebaseAuth.sendPasswordResetEmail(email: email),
       onSuccess: (response) => response,
     );

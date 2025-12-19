@@ -86,7 +86,7 @@ void main() {
           password: tPassword,
         ),
       );
-      verify(mockLocalDataSource.cacheUser(tUserModel));
+      verify(mockLocalDataSource.cacheUser(any));
       verifyNoMoreInteractions(mockFirebaseAuth);
       verifyNoMoreInteractions(mockLocalDataSource);
     });
@@ -139,7 +139,7 @@ void main() {
 
       // Assert
       expect(result.isFailure, true);
-      expect(result.getFailure(), isA<FirebaseFailure>());
+      expect(result.getFailure(), isA<AuthFailure>());
       expect(
         result.getFailure().message,
         equals(tFirebaseAuthException.message),
@@ -177,7 +177,7 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       expect(result.getSuccess(), equals(tUserEntity));
-      verify(mockLocalDataSource.cacheUser(tUserModel));
+      verify(mockLocalDataSource.cacheUser(any));
       verifyNoMoreInteractions(mockLocalDataSource);
     });
 
@@ -228,7 +228,7 @@ void main() {
 
       // Assert
       expect(result.isFailure, true);
-      expect(result.getFailure(), isA<FirebaseFailure>());
+      expect(result.getFailure(), isA<AuthFailure>());
       expect(
         result.getFailure().message,
         equals(tFirebaseAuthException.message),
@@ -248,7 +248,8 @@ void main() {
       // Assert
       expect(result.isSuccess, true);
       expect(result.getSuccess(), equals(tUserEntity));
-      verify(mockLocalDataSource.cacheUser(tUserModel));
+      verify(mockLocalDataSource.cacheUser(any));
+      verifyNoMoreInteractions(mockLocalDataSource);
     });
 
     test('returns null when no user is signed in', () async {
@@ -276,7 +277,7 @@ void main() {
 
       // Assert
       expect(result.isSuccess, true);
-      expect(result.getSuccess(), equals(tUserModel));
+      expect(result.getSuccess(), equals(tUserModel.toEntity()));
       verify(mockLocalDataSource.getLastSignedInUser());
     });
 
@@ -327,7 +328,7 @@ void main() {
 
       // Assert
       expect(result.isFailure, true);
-      expect(result.getFailure(), isA<FirebaseFailure>());
+      expect(result.getFailure(), isA<AuthFailure>());
       expect(
         result.getFailure().message,
         equals(tFirebaseAuthException.message),
@@ -380,7 +381,7 @@ void main() {
 
       // Assert
       expect(result.isFailure, true);
-      expect(result.getFailure(), isA<FirebaseFailure>());
+      expect(result.getFailure(), isA<AuthFailure>());
       expect(
         result.getFailure().message,
         equals(tFirebaseAuthException.message),

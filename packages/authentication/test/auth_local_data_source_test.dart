@@ -62,7 +62,9 @@ void main() {
 
       // Assert
       verify(mockSecureStorage.read(key: tCachedUserKey));
-      expect(result, equals(tUserModel));
+      expect(result, isNotNull);
+      expect(result?.uid, equals(tUserModel.uid));
+      expect(result?.email, equals(tUserModel.email));
     });
 
     test('should return null when there is no user in the cache', () async {

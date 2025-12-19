@@ -3,11 +3,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
+/// Model for user data serialization.
+/// Uses composition pattern - converts to [UserEntity] via [toEntity].
 @JsonSerializable()
-class UserModel extends UserEntity {
+class UserModel {
   const UserModel({
-    required super.uid,
-    super.email,
+    required this.uid,
+    this.email,
   });
 
   factory UserModel.fromEntity(UserEntity entity) {
@@ -20,5 +22,14 @@ class UserModel extends UserEntity {
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
+  final String uid;
+  final String? email;
+
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
+
+  /// Converts this model to a [UserEntity].
+  UserEntity toEntity() => UserEntity(
+    uid: uid,
+    email: email,
+  );
 }
