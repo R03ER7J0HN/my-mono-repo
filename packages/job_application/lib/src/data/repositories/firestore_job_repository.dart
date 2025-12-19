@@ -7,7 +7,7 @@ import 'package:job_application/src/domain/repositories/job_application_reposito
 import 'package:job_application/src/utils/firestore_exception_handler.dart';
 
 class FirestoreJobApplicationRepository
-    with FirestoreExceptionHandler
+    with ExceptionHandler, FirestoreExceptionHandler
     implements JobApplicationRepository {
   const FirestoreJobApplicationRepository(this._firestore);
 
@@ -30,7 +30,7 @@ class FirestoreJobApplicationRepository
     final docRef = _getCollection(job.userId).doc();
     final jobWithId = job.copyWith(id: docRef.id);
 
-    return handleFirebaseException(
+    return handleException(
       docRef.set(
         JobApplicationModel.fromEntity(jobWithId),
       ),
@@ -40,7 +40,7 @@ class FirestoreJobApplicationRepository
 
   @override
   FutureResult<void> updateJob(JobApplicationEntity job) {
-    return handleFirebaseException(
+    return handleException(
       _getCollection(job.userId)
           .doc(job.id)
           .update(
@@ -55,7 +55,7 @@ class FirestoreJobApplicationRepository
     required String userId,
     required String jobId,
   }) {
-    return handleFirebaseException(
+    return handleException(
       _getCollection(userId).doc(jobId).delete(),
       onSuccess: (_) {},
     );
@@ -73,7 +73,7 @@ class FirestoreJobApplicationRepository
 
   @override
   FutureResult<List<JobApplicationEntity>> getJobs(String userId) {
-    return handleFirebaseException(
+    return handleException(
       _getCollection(
         userId,
       ).orderBy(JobFields.dateApplied, descending: true).get(),
