@@ -10,7 +10,7 @@ import 'package:notification/src/notification_repository.dart';
 /// using Firebase Cloud Messaging.
 /// This class is internal to the package.
 class FirebaseNotificationRepository
-    with FirebaseExceptionHandler
+    with ExceptionHandler, FirebaseExceptionHandler
     implements NotificationRepository {
   /// Creates an instance of [FirebaseNotificationRepository].
   FirebaseNotificationRepository(this._firebaseMessaging);
@@ -36,7 +36,7 @@ class FirebaseNotificationRepository
 
   @override
   FutureResult<String?> getToken() {
-    return handleFirebaseException(
+    return handleException(
       _firebaseMessaging.getToken(),
       onSuccess: (token) => token,
     );
@@ -64,7 +64,7 @@ class FirebaseNotificationRepository
 
   @override
   FutureResult<void> requestPermission() {
-    return handleFirebaseException(
+    return handleException(
       _firebaseMessaging.requestPermission(),
       onSuccess: (_) {},
     );
