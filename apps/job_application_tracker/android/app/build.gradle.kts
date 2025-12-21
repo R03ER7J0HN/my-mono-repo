@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -6,6 +8,14 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// Load secrets from secrets.properties
+val secretsFile = rootProject.file("secrets.properties")
+val secrets = Properties().apply {
+    if (secretsFile.exists()) {
+        load(secretsFile.inputStream())
+    }
 }
 
 android {
@@ -31,6 +41,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Inject secrets as manifest placeholders
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = secrets.getProperty("GOOGLE_MAPS_API_KEY", "")
     }
 
     buildTypes {
