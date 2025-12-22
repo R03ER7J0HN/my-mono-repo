@@ -1,27 +1,81 @@
 # Job Application Tracker App
 
-The primary application in this monorepo, designed to help users track and manage their job applications efficiently.
+The primary Flutter application in this monorepo, designed to help users track and manage their job applications efficiently.
 
-## 🚀 Portfolio Highlights
+> ⚠️ **Work in Progress**: This app is under active development. Features listed below represent the current state.
 
-This project demonstrates a production-ready Flutter application architecture with the following key components:
+## ✨ Current Features
 
-- **Modular Monorepo Structure**: Built using `melos` to manage multiple packages, ensuring strict separation of concerns and code reusability.
-- **Feature-First Architecture**: The codebase is organized by features (e.g., authentication, job tracking) rather than technical layers, making it scalable and maintainable.
-- **State Management**: Utilizes `flutter_bloc` for predictable, testable, and reactive state management.
-- **Firebase Integration**:
-  - **Authentication**: Secure user sign-in flows using `firebase_auth`.
-  - **Cloud Messaging**: Push notifications for application updates via `firebase_messaging`.
-- **Localization**: Custom shell scripts (`generate_localizations.sh`) for managing app-wide localization.
-- **CI/CD Readiness**: Structured for automated testing and deployment pipelines (Fastlane/GitHub Actions ready).
+### Authentication (`features/auth/`)
+- **Sign In**: Email and password authentication
+- **Sign Up**: New user registration
+- **Forgot Password**: Password reset via email
 
-## Getting Started
+### Job Management (`features/jobs/`)
+- **Job List**: View all job applications with status filtering
+- **Job Entry**: Create and edit job applications with:
+  - Company name and job title
+  - Job posting URL (auto-detects platform)
+  - Work setup (Remote, Onsite, Hybrid)
+  - Employment type (Full-time, Part-time, Contract, Internship, Freelance)
+  - Salary expectations with currency
+  - Interview dates and deadlines
+  - Recruiter contact information
+  - Location with Google Maps integration
+  - Personal notes
 
-1.  **Bootstrap the Workspace**:
-    ```bash
-    melos bootstrap
-    ```
-2.  **Run the App**:
-    ```bash
-    flutter run
-    ```
+### Home Dashboard (`features/home/`)
+- Overview of application statistics
+- Quick access to recent applications
+
+### User Profile (`features/profile/`)
+- User account management
+- Sign out functionality
+
+### Splash Screen (`features/splash/`)
+- App initialization and auth state check
+
+## 🏗️ Architecture Highlights
+
+- **Feature-First Organization**: Each feature is self-contained with its own cubit, widgets, and localization
+- **State Management**: `flutter_bloc` (Cubit) for predictable, testable state
+- **Dependency Injection**: `GetIt` for service location
+- **Localization**: Per-feature ARB files with custom generation script
+
+## 📦 Package Dependencies
+
+This app consumes the following workspace packages:
+- `flutter_core` — Result types, extensions, error handling
+- `authentication` — Firebase Auth integration
+- `job_application` — Job entities and Firestore repository
+- `location_tracking` — Geolocation and Google Maps
+- `notification` — Push notifications (FCM)
+
+## 🚀 Getting Started
+
+1. **Bootstrap the workspace** (from monorepo root):
+   ```bash
+   melos bootstrap
+   ```
+
+2. **Configure secrets**:
+   ```bash
+   cp secrets.json.example secrets.json
+   # Add your Google Maps API key and other secrets
+   ```
+
+3. **Generate localization files**:
+   ```bash
+   ./generate_localizations.sh
+   ```
+
+4. **Run the app**:
+   ```bash
+   flutter run
+   ```
+
+## 🧪 Testing
+
+```bash
+flutter test
+```

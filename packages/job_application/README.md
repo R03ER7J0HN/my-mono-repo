@@ -1,32 +1,54 @@
-# Job Application Feature Package
+# Job Application Package
 
 A dedicated feature package responsible for the domain logic and data management of job applications.
 
-## Architecture: Clean Architecture + Modular Monolith
+> ⚠️ **Work in Progress**: This package is under active development.
 
-This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
+## ✨ Current Features
 
-### Key Concepts
+### Job Application Entity
+- Company name and job title
+- Job posting URL with platform auto-detection
+- Application date tracking
+- Status management (Applied, Interviewing, Offer, Rejected, Ghosted)
+- Work setup (Remote, Onsite, Hybrid)
+- Employment type (Full-time, Part-time, Contract, Internship, Freelance)
+- Salary tracking with currency support
+- Interview dates list
+- Deadlines list
+- Recruiter name
+- Location with coordinates (lat/long) and place ID
+- Personal notes
 
-1.  **Domain-Driven Design (DDD):**
-    - The business logic for job applications (e.g., validation, status transitions) is encapsulated within the Domain layer.
-    - Entities are pure Dart objects, free from framework dependencies like Flutter or Firebase.
+### Job Platforms Supported
+- LinkedIn
+- Indeed
+- Glassdoor
+- JobStreet
+- We Work Remotely
+- Upwork
+- Other
 
-2.  **Real-time Synchronization:**
-    - The repository exposes `Stream`s of data, allowing the UI to automatically update whenever the backend data changes (e.g., via Cloud Firestore).
+### Repository Operations
+- Create job application
+- Update job application
+- Delete job application
+- Get all applications for user
+- Real-time stream of job applications
 
-### Layering
+## 🏗️ Architecture
+
+This package follows **Clean Architecture** with a Domain-Data split:
 
 | Layer | Component | Role |
-| :--- | :--- | :--- |
-| **Domain** | `JobApplicationRepository` | **(Abstract Interface)** Defines operations for CRUD and real-time listening of applications. |
-| **Domain** | `JobApplicationEntity` | **(Entity)** Immutable data class representing a job application. |
-| **Data** | `FirestoreJobApplicationRepository` | **(Implementation)** Concrete implementation using Cloud Firestore. |
-| **Data** | `JobApplicationModel` | **(DTO)** Data Transfer Object for serializing/deserializing Firestore documents. |
+|-------|-----------|------|
+| **Domain** | `JobApplicationRepository` | Abstract interface for CRUD operations |
+| **Domain** | `JobApplicationEntity` | Immutable job application representation |
+| **Domain** | `JobLocationEntity` | Location with address and coordinates |
+| **Data** | `FirestoreJobApplicationRepository` | Cloud Firestore implementation |
+| **Data** | `JobApplicationModel` | DTO for Firestore serialization |
 
-## Installation
-
-1.  Add the dependency to your `pubspec.yaml`.
+## 📦 Installation
 
 ```yaml
 dependencies:
@@ -34,35 +56,30 @@ dependencies:
     path: ../packages/job_application
 ```
 
-## Usage
+## 💡 Usage
 
-### 1. Initialization
-
-Register the repository with your dependency injection container (e.g., `GetIt`).
+### Initialization
 
 ```dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   JobApplication.initialize(GetIt.I);
 }
 ```
 
-### 2. Consuming in the App Layer
+### Consuming in Cubit
 
 ```dart
-class JobBoardCubit extends Cubit<JobBoardState> {
-  final JobApplicationRepository _repository;
-
-  JobBoardCubit({required JobApplicationRepository repository})
-      : _repository = repository,
-        super(JobBoardInitial()) {
+class JobListCubit extends Cubit<JobListState> {
+  JobListCubit(this._repository) : super(JobListState.initial()) {
     _subscribeToJobs();
   }
 
+  final JobApplicationRepository _repository;
+
   void _subscribeToJobs() {
-    _repository.watchJobs('SomeUserId').listen((jobs) {
-      emit(JobBoardLoaded(jobs));
+    _repository.watchJobs(userId).listen((jobs) {
+      emit(JobListState.loaded(jobs));
     });
   }
   
@@ -72,26 +89,16 @@ class JobBoardCubit extends Cubit<JobBoardState> {
 }
 ```
 
-## Testing
-
-Mocking the repository allows testing business logic without a live backend.
+## 🧪 Testing
 
 ```dart
 class MockJobRepo extends Mock implements JobApplicationRepository {}
 
 void main() {
-  test('JobBoardCubit emits loaded state with jobs', () {
+  test('JobListCubit emits loaded state with jobs', () {
     final mockRepo = MockJobRepo();
-    when(mockRepo.getJobApplications()).thenAnswer((_) => Stream.value([job1, job2]));
-    
+    when(mockRepo.watchJobs(any)).thenAnswer((_) => Stream.value([job1, job2]));
     // ... assert Cubit state
   });
 }
 ```
-
-## 🚀 Highlights
-
-- **Cloud Firestore Integration**: Implements real-time data synchronization and persistence using `cloud_firestore`.
-- **Immutable Data Models**: Uses `freezed` and `json_serializable` to generate robust, immutable data classes with JSON serialization support.
-- **Domain-Driven Design**: Encapsulates business logic related to job applications (creation, status updates, deletion) within this package.
-- **Dependency Injection**: Designed to work with `get_it` for loose coupling and easy testing.

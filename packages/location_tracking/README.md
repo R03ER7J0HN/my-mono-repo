@@ -2,38 +2,53 @@
 
 A module dedicated to handling geolocation services and map visualizations.
 
-## Architecture: MVVM, Clean Architecture, Modular Monolith
+> ⚠️ **Work in Progress**: This package is under active development.
 
-This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
+## ✨ Current Features
 
-### Key Concepts
+### Geolocation Services
+- Get current device position
+- Location permission handling
+- Location entity with latitude/longitude
 
-1.  **Abstraction of Hardware:**
-    - The `Geolocator` package is wrapped behind a domain interface. This allows the app to request location data without knowing the underlying implementation details.
-    - It simplifies testing by allowing location services to be mocked easily.
+### Google Maps Integration
+- Google Maps Flutter widget support
+- Place autocomplete with Google Places API
+- Address to coordinates conversion
 
-2.  **Presentation Isolation:**
-    - Map widgets and logic are contained within this package, exposing high-level components to the main app rather than raw map controllers.
+### Places API
+- Address search/autocomplete
+- Place details retrieval
+- Place predictions
 
-### Layering
+## 🏗️ Architecture
+
+This package follows **Clean Architecture** with a Domain-Data split:
 
 | Layer | Component | Role |
-| :--- | :--- | :--- |
-| **Domain** | `LocationRepository` | **(Abstract Interface)** Contract for fetching current position and permission status. |
-| **Domain** | `LocationEntity` | **(Entity)** Pure object representing coordinates (lat, long). |
-| **Data** | `GeolocatorRepository` | **(Implementation)** Uses `geolocator` plugin to fetch device location. |
-<!-- | **Presentation** | `MapView` | **(Widget)** A reusable widget that wraps `GoogleMap` and handles markers. | -->
+|-------|-----------|------|
+| **Domain** | `LocationRepository` | Abstract interface for location operations |
+| **Domain** | `PlacesRepository` | Abstract interface for Places API |
+| **Domain** | `LocationEntity` | Coordinates representation (lat, long) |
+| **Domain** | `PlacePrediction` | Place autocomplete suggestion |
+| **Data** | `GeolocatorDataSource` | Device location via Geolocator plugin |
+| **Data** | `PlacesRemoteDataSource` | Google Places API (Retrofit) |
 
-## Installation
+## 📦 Installation
 
-1.  Add the dependency to your `pubspec.yaml`.
-2.  Configure AndroidManifest.xml and Info.plist for location permissions.
+```yaml
+dependencies:
+  location_tracking:
+    path: ../packages/location_tracking
+```
 
-## Usage
+Configure platform permissions:
+- **Android**: Add location permissions to `AndroidManifest.xml`
+- **iOS**: Add location usage descriptions to `Info.plist`
 
-### 1. Initialization
+## 💡 Usage
 
-Register the repository.
+### Initialization
 
 ```dart
 void main() {
@@ -41,45 +56,37 @@ void main() {
 }
 ```
 
-### 2. Fetching Location
+### Fetching Current Location
 
 ```dart
 class LocationCubit extends Cubit<LocationState> {
+  LocationCubit(this._repository) : super(LocationState.initial());
+
   final LocationRepository _repository;
 
-  LocationCubit({required LocationRepository repository})
-      : _repository = repository,
-        super(LocationInitial());
-
-  Future<void> checkLocation() async {
+  Future<void> getCurrentLocation() async {
     final result = await _repository.getCurrentPosition();
     result.fold(
-      (failure) => emit(LocationError(failure)),
-      (location) => emit(LocationLoaded(location)),
+      onFailure: (failure) => emit(LocationState.error(failure)),
+      onSuccess: (location) => emit(LocationState.loaded(location)),
     );
   }
 }
 ```
 
-<!-- ### 3. Using the Map Widget
+### Place Autocomplete
 
 ```dart
-class JobMapScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MapView(
-        initialPosition: const Location(lat: 37.77, long: -122.41),
-        markers: _getJobMarkers(),
-      ),
-    );
-  }
+Future<void> searchPlaces(String query) async {
+  final result = await _placesRepository.searchPlaces(query);
+  result.fold(
+    onFailure: (failure) => emit(state.copyWith(error: failure)),
+    onSuccess: (predictions) => emit(state.copyWith(predictions: predictions)),
+  );
 }
 ```
 
-## Testing
-
-You can test location logic without needing a physical device or emulator.
+## 🧪 Testing
 
 ```dart
 class MockLocationRepo extends Mock implements LocationRepository {}
@@ -87,16 +94,9 @@ class MockLocationRepo extends Mock implements LocationRepository {}
 void main() {
   test('LocationCubit emits loaded when position is found', () async {
     final mockRepo = MockLocationRepo();
-    when(mockRepo.getCurrentPosition()).thenAnswer((_) async => Right(testLocation));
-    
+    when(mockRepo.getCurrentPosition())
+        .thenAnswer((_) async => Result.success(testLocation));
     // ... assert Cubit state
   });
 }
-``` -->
-
-## 🚀 Highlights
-
-- **Google Maps Integration**: Wraps `google_maps_flutter` to provide map views, markers, and camera control.
-- **Geolocation Services**: Manages user permissions and retrieves real-time location updates using `geolocator`.
-- **Modularity**: Isolates complex map logic from the main UI, making the codebase cleaner and the feature reusable.
-- **Reactive Location Updates**: Exposes location data streams for real-time UI updates.
+```

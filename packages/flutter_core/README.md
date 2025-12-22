@@ -1,31 +1,48 @@
 # Flutter Core Package
 
-The foundational library for the monorepo, providing shared utilities, networking clients, and base classes.
+The foundational library for the monorepo, providing shared utilities, error handling, and base classes.
 
-## Architecture: Foundation Layer
+> ⚠️ **Work in Progress**: This package is under active development.
 
-This package serves as the **Core Layer** of the application, providing essential building blocks that other feature packages depend on. It enforces consistency in error handling, networking, and coding standards.
+## ✨ Current Features
 
-### Key Concepts
+### Result Types
+- `Result<T>` — Functional wrapper for success/failure outcomes
+- `FutureResult<T>` — Async result type alias
+- Pattern matching with `.fold()` for explicit error handling
 
-1.  **Functional Error Handling:**
-    - Leverages `fpdart` to replace exception-based control flow with **Result types** (`Either<Failure, T>`).
-    - This ensures that errors are treated as values and must be handled explicitly by the consumer.
+### Failure Hierarchy
+- `Failure` — Base class for all domain-level errors
+- `FirebaseFailure` — Firebase-specific errors
+- `DioFailure` — HTTP/API errors
+- `FormatFailure` — JSON/parsing errors
+- `GenericFailure` — Fallback for unexpected errors
+- `CancellationFailure` — User-cancelled operations
 
-2.  **Standardized Failures:**
-    - Defines a base `Failure` class hierarchy (e.g., `ServerFailure`, `CacheFailure`, `NetworkFailure`) to unify error reporting across the app.
+### Exception Handling
+- `ExceptionHandler` mixin — Standardized try-catch pattern with `handleException()`
+- Extensible for package-specific error mapping
 
-### Components
+### Extensions
+- `BuildContext` extensions (snackbars, navigation)
+- `String` extensions (capitalize, validation)
+- `DateTime` extensions
 
-| Component    | Role                                                                             |
-| :----------- | :------------------------------------------------------------------------------- |
-| `Result<T>`  | **(Type Alias)** A wrapper around `Either<Failure, T>` for concise return types. |
-| `Failure`    | **(Base Class)** The parent class for all domain-level errors.                   |
-| `Extensions` | **(Utils)** Shared extension methods for `BuildContext`, `String`, `Date`, etc.  |
+### Mixins
+- `SafeEmitMixin` — Prevents Cubit emit after close
 
-## Installation
+## 🏗️ Architecture
 
-1.  Add the dependency to your `pubspec.yaml`.
+This package serves as the **Foundation Layer**, providing essential building blocks that all feature packages depend on.
+
+| Component | Role |
+|-----------|------|
+| `Result<T>` | Type alias wrapping success/failure outcomes |
+| `Failure` | Base class for domain-level errors |
+| `ExceptionHandler` | Mixin for consistent error handling in repositories |
+| `Extensions` | Shared utility methods for BuildContext, String, etc. |
+
+## 📦 Installation
 
 ```yaml
 dependencies:
@@ -33,63 +50,32 @@ dependencies:
     path: ../flutter_core
 ```
 
-## Usage
+## 💡 Usage
 
-### 1. Handling Errors with `Result`
-
-Instead of try-catch blocks, use functional pattern matching.
-
-```dart
-FutureResult<User> getUser() async {
-  try {
-    final user = await api.fetchUser();
-    return Result.success(user);
-  } catch (e) {
-    return Result.failure(ServerFailure(message: e.toString()));
-  }
-}
-
-void main() async {
-  final result = await getUser();
-
-  result.fold(
-    (failure) => print('Error: ${failure.message}'),
-    (user) => print('User: ${user.name}'),
-  );
-}
-```
-
-or use the api_response_handler.dart
+### Handling Errors with Result
 
 ```dart
 FutureResult<User> getUser() {
-  return handleApiResponse(
-    getUser(),
+  return handleException(
+    api.fetchUser(),
     onSuccess: (user) => user.toEntity(),
   );
 }
 
-void main() async {
-  final result = await getUser();
-
-  result.fold(
-    (failure) => print('Error: ${failure.message}'),
-    (user) => print('User: ${user.name}'),
-  );
-}
+// Consuming results
+final result = await getUser();
+result.fold(
+  onFailure: (failure) => print('Error: ${failure.message}'),
+  onSuccess: (user) => print('User: ${user.name}'),
+);
 ```
 
-### 2. Using Extensions
+### Using Extensions
 
 ```dart
-// Context extensions for showing snackbar
-context.showSnackBar('This is an error!', type: SnackBarType.error);
+// Context extensions
+context.showSnackBar('Error!', type: SnackBarType.error);
 
 // String extensions
 final capitalized = 'hello'.capitalize();
 ```
-
-## 🚀 Highlights
-
-- **Functional Programming**: Leverages `fpdart` to introduce functional concepts like `Either` and `Option` for robust error handling and null safety.
-- **Shared Utilities**: Contains reusable extensions and helper functions to reduce boilerplate in feature packages.

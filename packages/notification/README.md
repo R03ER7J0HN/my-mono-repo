@@ -1,107 +1,103 @@
-# Firebase Notification Package
+# Notification Package
 
-A pragmatic, feature-sliced package for handling **Remote Push Notifications** using Firebase Cloud Messaging (FCM).
+A package for handling **Remote Push Notifications** using Firebase Cloud Messaging (FCM).
 
-## Architecture: Pragmatic Clean Architecture
+> ⚠️ **Work in Progress**: This package is under active development.
 
-This package follows a **Domain-Data split** architecture, designed to be modular, testable, and strictly separated from the presentation layer.
+## ✨ Current Features
 
-### Key Concepts
+### Firebase Cloud Messaging
+- FCM token retrieval
+- Foreground message stream
+- Background message handling
+- Notification permission requests
 
-1.  **Remote vs. Local Separation:**
-    - This package is responsible **ONLY** for the **Remote** data source (fetching data from Firebase).
-    - It is **NOT** responsible for displaying local notifications (banners, sounds, vibrations). That is the responsibility of the consuming application (Presentation Layer).
+### Notification Entity
+- Title and body content
+- Data payload support
+- Decoupled from Firebase `RemoteMessage`
 
-2.  **Repository Pattern:**
-    - We use `NotificationRepository` as the abstraction. This treats notifications as a data source that provides a stream of events, rather than a "service" that performs actions.
+## 🏗️ Architecture
 
-### Layering
+This package follows **Clean Architecture** with a Domain-Data split:
 
-| Layer      | Component                        | Role                                                                                                                     |
-| :--------- | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
-| **Domain** | `NotificationRepository`         | **(Abstract Interface)** The contract that the app depends on. Defines _what_ we can do (get token, listen to messages). |
-| **Domain** | `Notification`                   | **(Entity)** A pure, immutable Dart object representing a notification. Decoupled from Firebase's `RemoteMessage`.       |
-| **Data**   | `FirebaseNotificationRepository` | **(Implementation)** The concrete class that talks to `firebase_messaging`. It maps raw data to Domain Entities.         |
+| Layer | Component | Role |
+|-------|-----------|------|
+| **Domain** | `NotificationRepository` | Abstract interface for notification operations |
+| **Domain** | `NotificationEntity` | Immutable notification representation |
+| **Data** | `FirebaseNotificationRepository` | FCM implementation |
 
-## Installation
+**Note**: This package handles **remote** notifications only. Local notification display (banners, sounds) is the responsibility of the consuming app.
 
-1.  Add the dependency to your `pubspec.yaml`.
-2.  Ensure you have configured Firebase for your Android and iOS apps.
+## 📦 Installation
 
-## Usage
+```yaml
+dependencies:
+  notification:
+    path: ../packages/notification
+```
 
-### 1. Initialization
+Ensure Firebase is configured for your Android and iOS apps.
 
-Initialize the package in your `main.dart`. This registers the repository with `GetIt`.
+## 💡 Usage
+
+### Initialization
 
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Initialize this package
   FirebaseNotification.initialize(GetIt.instance);
-
   runApp(const MyApp());
 }
 ```
 
-### 2. Consuming in the App Layer (e.g., Cubit)
-
-Inject the `NotificationRepository` into your Cubit. Do not depend on the concrete implementation.
+### Listening to Notifications
 
 ```dart
 class AppCubit extends Cubit<AppState> {
-  final NotificationRepository _notificationRepository;
-  final LocalNotificationService _localNotificationService; // Your app's local handler
-
-  AppCubit({
-    required NotificationRepository notificationRepository,
-    required LocalNotificationService localNotificationService,
-  })  : _notificationRepository = notificationRepository,
-        _localNotificationService = localNotificationService,
-        super(AppState.initial()) {
+  AppCubit(this._notificationRepository) : super(AppState.initial()) {
     _initNotifications();
   }
 
+  final NotificationRepository _notificationRepository;
+
   void _initNotifications() {
-    // Listen to remote data
     _notificationRepository.onMessage.listen((notification) {
-      // Decide how to present it locally
+      // Handle incoming notification
       if (notification.title != null) {
-        _localNotificationService.showNotification(
-          title: notification.title!,
-          body: notification.body!
-        );
+        // Show local notification or update UI
       }
     });
   }
 }
 ```
 
-## Testing
-
-This architecture makes testing easy. You can mock `NotificationRepository` to simulate incoming notifications without needing a real Firebase connection.
+### Getting FCM Token
 
 ```dart
-// Mocking in tests
+Future<void> registerForNotifications() async {
+  final result = await _notificationRepository.getToken();
+  result.fold(
+    onFailure: (failure) => print('Failed to get token'),
+    onSuccess: (token) => print('FCM Token: $token'),
+  );
+}
+```
+
+## 🧪 Testing
+
+```dart
 class MockNotificationRepository extends Mock implements NotificationRepository {}
 
 void main() {
   test('AppCubit handles incoming notification', () {
     final mockRepo = MockNotificationRepository();
     when(mockRepo.onMessage).thenAnswer((_) => Stream.value(
-      Notification(title: 'Test', body: 'Body')
+      NotificationEntity(title: 'Test', body: 'Body'),
     ));
-
-    // ... assert that AppCubit reacts correctly
+    // ... assert Cubit state
   });
 }
 ```
-
-## 🚀 Highlights
-
-- **Pragmatic Clean Architecture**: Demonstrates a clear separation of Domain and Data layers.
-- **Repository Pattern**: Abstracts the data source (`firebase_messaging`) behind a clean interface (`NotificationRepository`).
-- **Stream-Based Architecture**: Treats notifications as a reactive stream of events.
-- **Testability**: Designed with dependency injection in mind, allowing for easy mocking of remote services.
