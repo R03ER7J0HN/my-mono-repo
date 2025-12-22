@@ -10,6 +10,7 @@ class LocationEntity extends Equatable {
     this.speedAccuracy = 0.0,
     this.heading = 0.0,
     this.timestamp,
+    this.address,
   });
 
   final double latitude;
@@ -20,6 +21,7 @@ class LocationEntity extends Equatable {
   final double speedAccuracy;
   final double heading;
   final DateTime? timestamp;
+  final String? address;
 
   @override
   List<Object?> get props => [

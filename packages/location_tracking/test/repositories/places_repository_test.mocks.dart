@@ -48,12 +48,14 @@ class MockPlacesRemoteDataSource extends _i1.Mock
   _i4.Future<_i2.HttpResponse<_i5.PlacesPredictionResponseModel>> searchPlaces({
     required String? query,
     required String? apiKey,
+    String? sessionToken,
     String? components = 'country:ph',
   }) =>
       (super.noSuchMethod(
             Invocation.method(#searchPlaces, [], {
               #query: query,
               #apiKey: apiKey,
+              #sessionToken: sessionToken,
               #components: components,
             }),
             returnValue:
@@ -65,6 +67,7 @@ class MockPlacesRemoteDataSource extends _i1.Mock
                     Invocation.method(#searchPlaces, [], {
                       #query: query,
                       #apiKey: apiKey,
+                      #sessionToken: sessionToken,
                       #components: components,
                     }),
                   ),
@@ -73,28 +76,33 @@ class MockPlacesRemoteDataSource extends _i1.Mock
           as _i4.Future<_i2.HttpResponse<_i5.PlacesPredictionResponseModel>>);
 
   @override
-  _i4.Future<_i2.HttpResponse<_i6.PlaceDetailsModel>> getPlaceDetails({
+  _i4.Future<_i2.HttpResponse<_i6.PlaceDetailsResponseModel>> getPlaceDetails({
     required String? placeId,
     required String? apiKey,
+    String? sessionToken,
     String? fields = 'place_id,geometry,formatted_address,name',
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getPlaceDetails, [], {
               #placeId: placeId,
               #apiKey: apiKey,
+              #sessionToken: sessionToken,
               #fields: fields,
             }),
             returnValue:
-                _i4.Future<_i2.HttpResponse<_i6.PlaceDetailsModel>>.value(
-                  _FakeHttpResponse_0<_i6.PlaceDetailsModel>(
+                _i4.Future<
+                  _i2.HttpResponse<_i6.PlaceDetailsResponseModel>
+                >.value(
+                  _FakeHttpResponse_0<_i6.PlaceDetailsResponseModel>(
                     this,
                     Invocation.method(#getPlaceDetails, [], {
                       #placeId: placeId,
                       #apiKey: apiKey,
+                      #sessionToken: sessionToken,
                       #fields: fields,
                     }),
                   ),
                 ),
           )
-          as _i4.Future<_i2.HttpResponse<_i6.PlaceDetailsModel>>);
+          as _i4.Future<_i2.HttpResponse<_i6.PlaceDetailsResponseModel>>);
 }

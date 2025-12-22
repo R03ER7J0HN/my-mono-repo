@@ -4,6 +4,7 @@ import 'package:flutter_core/flutter_core.dart';
 import 'package:location_tracking/src/domain/entities/place_prediction_entity.dart';
 import 'package:location_tracking/src/domain/repositories/places_repository.dart';
 import 'package:location_tracking/src/presentation/places_search/cubit/places_search_state.dart';
+import 'package:uuid/uuid.dart';
 
 /// Cubit for managing Places search state and business logic.
 class PlacesSearchCubit extends Cubit<PlacesSearchState>
@@ -11,10 +12,12 @@ class PlacesSearchCubit extends Cubit<PlacesSearchState>
   PlacesSearchCubit(
     this._repository, {
     this.debounceTime = const Duration(milliseconds: 400),
-  }) : super(const PlacesSearchState());
+  }) : _sessionToken = const Uuid().v4(),
+       super(const PlacesSearchState());
 
   final PlacesRepository _repository;
   final Duration debounceTime;
+  final String _sessionToken;
 
   Timer? _debounceTimer;
 
@@ -33,7 +36,10 @@ class PlacesSearchCubit extends Cubit<PlacesSearchState>
   Future<void> _executeSearch(String query) async {
     safeEmit(state.copyWith(isSearching: true));
 
-    final result = await _repository.searchPlaces(query);
+    final result = await _repository.searchPlaces(
+      query,
+      sessionToken: _sessionToken,
+    );
 
     result.fold(
       onFailure: (failure) => safeEmit(
@@ -60,21 +66,28 @@ class PlacesSearchCubit extends Cubit<PlacesSearchState>
       ),
     );
 
-    final result = await _repository.getPlaceDetails(prediction.placeId);
+    final result = await _repository.getPlaceDetails(
+      prediction.placeId,
+      sessionToken: _sessionToken,
+    );
 
     result.fold(
-      onFailure: (failure) => safeEmit(
-        state.copyWith(
-          isFetchingDetails: false,
-          errorMessage: failure.message,
-        ),
-      ),
-      onSuccess: (details) => safeEmit(
-        state.copyWith(
-          isFetchingDetails: false,
-          selectedPlace: details,
-        ),
-      ),
+      onFailure: (failure) {
+        safeEmit(
+          state.copyWith(
+            isFetchingDetails: false,
+            errorMessage: failure.message,
+          ),
+        );
+      },
+      onSuccess: (details) {
+        safeEmit(
+          state.copyWith(
+            isFetchingDetails: false,
+            selectedPlace: details,
+          ),
+        );
+      },
     );
   }
 

@@ -44,15 +44,24 @@ class MockPlacesRepository extends _i1.Mock implements _i3.PlacesRepository {
 
   @override
   _i4.Future<_i2.Result<List<_i5.PlacePredictionEntity>>> searchPlaces(
-    String? query,
-  ) =>
+    String? query, {
+    String? sessionToken,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#searchPlaces, [query]),
+            Invocation.method(
+              #searchPlaces,
+              [query],
+              {#sessionToken: sessionToken},
+            ),
             returnValue:
                 _i4.Future<_i2.Result<List<_i5.PlacePredictionEntity>>>.value(
                   _FakeResult_0<List<_i5.PlacePredictionEntity>>(
                     this,
-                    Invocation.method(#searchPlaces, [query]),
+                    Invocation.method(
+                      #searchPlaces,
+                      [query],
+                      {#sessionToken: sessionToken},
+                    ),
                   ),
                 ),
           )
@@ -60,14 +69,23 @@ class MockPlacesRepository extends _i1.Mock implements _i3.PlacesRepository {
 
   @override
   _i4.Future<_i2.Result<_i6.PlaceDetailsEntity>> getPlaceDetails(
-    String? placeId,
-  ) =>
+    String? placeId, {
+    String? sessionToken,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#getPlaceDetails, [placeId]),
+            Invocation.method(
+              #getPlaceDetails,
+              [placeId],
+              {#sessionToken: sessionToken},
+            ),
             returnValue: _i4.Future<_i2.Result<_i6.PlaceDetailsEntity>>.value(
               _FakeResult_0<_i6.PlaceDetailsEntity>(
                 this,
-                Invocation.method(#getPlaceDetails, [placeId]),
+                Invocation.method(
+                  #getPlaceDetails,
+                  [placeId],
+                  {#sessionToken: sessionToken},
+                ),
               ),
             ),
           )

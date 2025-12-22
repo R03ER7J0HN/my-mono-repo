@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location_tracking/src/data/datasources/geolocator_data_source.dart';
 import 'package:location_tracking/src/domain/entities/location_entity.dart';
 import 'package:location_tracking/src/domain/entities/location_permission_status.dart';
+import 'package:location_tracking/src/domain/entities/location_result.dart';
 import 'package:location_tracking/src/domain/failures/location_failure.dart';
 import 'package:location_tracking/src/domain/repositories/location_repository.dart';
 
@@ -12,36 +13,41 @@ class GeolocatorRepository implements LocationRepository {
   final GeolocatorDataSource _dataSource;
 
   @override
-  FutureResult<LocationEntity> getCurrentLocation() async {
+  Future<LocationResult> getCurrentLocationWithPermission() async {
     try {
-      LocationPermission permission;
-
       final serviceEnabled = await _dataSource.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        return Result.failure(
-          const LocationFailure('Location services are disabled.'),
-        );
+        return const LocationServiceDisabled();
       }
 
-      permission = await _dataSource.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await _dataSource.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Result.failure(
-            const LocationFailure('Location permissions are denied'),
-          );
-        }
+      final permission = await _resolvePermission();
+
+      final status = _mapPermission(permission);
+      if (!status.isGranted) {
+        return LocationPermissionRequired(status);
       }
 
-      if (permission == LocationPermission.deniedForever) {
-        return Result.failure(
-          const LocationFailure(
-            '''
-Location permissions are permanently denied, we cannot request permissions.''',
-          ),
-        );
-      }
+      // Get location if permission is granted
+      final position = await _dataSource.getCurrentPosition();
+      return LocationSuccess(_mapPositionToEntity(position));
+    } on Exception catch (e) {
+      return LocationError(e.toString());
+    }
+  }
 
+  Future<LocationPermission> _resolvePermission() async {
+    final current = await _dataSource.checkPermission();
+
+    if (current != LocationPermission.denied) {
+      return current;
+    }
+
+    return _dataSource.requestPermission();
+  }
+
+  @override
+  FutureResult<LocationEntity> getCurrentLocation() async {
+    try {
       final position = await _dataSource.getCurrentPosition();
       return Result.success(_mapPositionToEntity(position));
     } on Exception catch (e) {
@@ -65,34 +71,10 @@ Location permissions are permanently denied, we cannot request permissions.''',
   }
 
   @override
-  FutureResult<LocationPermissionStatus> requestPermission() async {
-    try {
-      final permission = await _dataSource.requestPermission();
-      return Result.success(_mapPermission(permission));
-    } on Exception catch (e) {
-      return Result.failure(LocationFailure(e.toString()));
-    }
-  }
+  Future<bool> openAppSettings() => _dataSource.openAppSettings();
 
   @override
-  FutureResult<bool> openAppSettings() async {
-    try {
-      final result = await _dataSource.openAppSettings();
-      return Result.success(result);
-    } on Exception catch (e) {
-      return Result.failure(LocationFailure(e.toString()));
-    }
-  }
-
-  @override
-  FutureResult<bool> openLocationSettings() async {
-    try {
-      final result = await _dataSource.openLocationSettings();
-      return Result.success(result);
-    } on Exception catch (e) {
-      return Result.failure(LocationFailure(e.toString()));
-    }
-  }
+  Future<bool> openLocationSettings() => _dataSource.openLocationSettings();
 
   @override
   double calculateDistance(LocationEntity start, LocationEntity end) {

@@ -3,6 +3,7 @@ import 'package:location_tracking/src/data/datasources/places_remote_data_source
 import 'package:location_tracking/src/data/models/place_prediction_model.dart';
 import 'package:location_tracking/src/domain/entities/place_details_entity.dart';
 import 'package:location_tracking/src/domain/entities/place_prediction_entity.dart';
+import 'package:location_tracking/src/domain/failures/failures.dart';
 import 'package:location_tracking/src/domain/repositories/places_repository.dart';
 
 class GooglePlacesRepository with ExceptionHandler implements PlacesRepository {
@@ -16,26 +17,56 @@ class GooglePlacesRepository with ExceptionHandler implements PlacesRepository {
   final String _apiKey;
 
   @override
-  FutureResult<List<PlacePredictionEntity>> searchPlaces(String query) async {
+  FutureResult<List<PlacePredictionEntity>> searchPlaces(
+    String query, {
+    String? sessionToken,
+  }) async {
     if (query.trim().isEmpty) {
       return Result.success(const []);
     }
 
-    return handleException(
-      _dataSource.searchPlaces(query: query, apiKey: _apiKey),
-      onSuccess: (response) {
-        return response.data.predictions.toEntityList();
-      },
-    );
+    try {
+      return handleException(
+        _dataSource.searchPlaces(
+          query: query,
+          apiKey: _apiKey,
+          sessionToken: sessionToken,
+        ),
+        onSuccess: (response) {
+          return response.data.predictions.toEntityList();
+        },
+      );
+    } on Exception catch (e) {
+      return Result.failure(
+        PlacesFailure(
+          'Failed to search places: $e',
+        ),
+      );
+    }
   }
 
   @override
-  FutureResult<PlaceDetailsEntity> getPlaceDetails(String placeId) async {
-    return handleException(
-      _dataSource.getPlaceDetails(placeId: placeId, apiKey: _apiKey),
-      onSuccess: (response) {
-        return response.data.toEntity();
-      },
-    );
+  FutureResult<PlaceDetailsEntity> getPlaceDetails(
+    String placeId, {
+    String? sessionToken,
+  }) async {
+    try {
+      return handleException(
+        _dataSource.getPlaceDetails(
+          placeId: placeId,
+          apiKey: _apiKey,
+          sessionToken: sessionToken,
+        ),
+        onSuccess: (response) {
+          return response.data.toEntity();
+        },
+      );
+    } on Exception catch (e) {
+      return Result.failure(
+        PlacesFailure(
+          'Failed to fetch place details: $e',
+        ),
+      );
+    }
   }
 }

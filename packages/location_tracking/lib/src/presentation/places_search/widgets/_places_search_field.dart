@@ -92,24 +92,25 @@ class _PlacesSearchFieldViewState extends State<_PlacesSearchFieldView> {
   }
 
   void _showOverlay(List<PlacePredictionEntity> predictions) {
+    final renderBox = context.findRenderObject() as RenderBox?;
+
     _removeOverlay();
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: () {
-          final renderBox = context.findRenderObject() as RenderBox?;
-          return renderBox?.size.width ?? 300;
-        }(),
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: const Offset(0, 56),
-          child: PredictionsDropdown(
-            predictions: predictions,
-            onPredictionSelected: _onPredictionSelected,
+      builder: (context) {
+        return Positioned(
+          width: renderBox?.size.width ?? 300,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, 56),
+            child: PredictionsDropdown(
+              predictions: predictions,
+              onPredictionSelected: _onPredictionSelected,
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -180,6 +181,7 @@ class _PlacesSearchFieldViewState extends State<_PlacesSearchFieldView> {
               focusNode: _focusNode,
               onChanged: _onTextChanged,
               decoration: _buildDecoration(isLoading),
+              onTapOutside: (event) => _focusNode.unfocus(),
             );
           },
         ),
@@ -190,9 +192,8 @@ class _PlacesSearchFieldViewState extends State<_PlacesSearchFieldView> {
   InputDecoration _buildDecoration(bool isLoading) {
     const loadingIndicator = Padding(
       padding: EdgeInsets.all(12),
-      child: SizedBox(
-        width: 20,
-        height: 20,
+      child: SizedBox.square(
+        dimension: 16,
         child: CircularProgressIndicator(strokeWidth: 2),
       ),
     );

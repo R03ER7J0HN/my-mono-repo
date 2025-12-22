@@ -51,7 +51,7 @@ class _PredictionTile extends StatelessWidget {
       leading: const Icon(Icons.location_on_outlined),
       title: Text(
         prediction.mainText ?? prediction.description,
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: prediction.secondaryText != null

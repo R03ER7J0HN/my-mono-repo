@@ -25,14 +25,17 @@ class _PlacesRemoteDataSource implements PlacesRemoteDataSource {
   Future<HttpResponse<PlacesPredictionResponseModel>> searchPlaces({
     required String query,
     required String apiKey,
+    String? sessionToken,
     String components = 'country:ph',
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'input': query,
       r'key': apiKey,
+      r'sessiontoken': sessionToken,
       r'components': components,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options =
@@ -61,20 +64,23 @@ class _PlacesRemoteDataSource implements PlacesRemoteDataSource {
   }
 
   @override
-  Future<HttpResponse<PlaceDetailsModel>> getPlaceDetails({
+  Future<HttpResponse<PlaceDetailsResponseModel>> getPlaceDetails({
     required String placeId,
     required String apiKey,
+    String? sessionToken,
     String fields = 'place_id,geometry,formatted_address,name',
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'place_id': placeId,
       r'key': apiKey,
+      r'sessiontoken': sessionToken,
       r'fields': fields,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<PlaceDetailsModel>>(
+    final _options = _setStreamType<HttpResponse<PlaceDetailsResponseModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -85,9 +91,9 @@ class _PlacesRemoteDataSource implements PlacesRemoteDataSource {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late PlaceDetailsModel _value;
+    late PlaceDetailsResponseModel _value;
     try {
-      _value = PlaceDetailsModel.fromJson(_result.data!);
+      _value = PlaceDetailsResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);
       rethrow;

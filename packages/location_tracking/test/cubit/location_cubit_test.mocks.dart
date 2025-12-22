@@ -7,12 +7,15 @@ import 'dart:async' as _i4;
 
 import 'package:flutter_core/flutter_core.dart' as _i2;
 import 'package:location_tracking/src/domain/entities/location_entity.dart'
-    as _i5;
+    as _i7;
 import 'package:location_tracking/src/domain/entities/location_permission_status.dart'
-    as _i6;
+    as _i8;
+import 'package:location_tracking/src/domain/entities/location_result.dart'
+    as _i5;
 import 'package:location_tracking/src/domain/repositories/location_repository.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -44,84 +47,73 @@ class MockLocationRepository extends _i1.Mock
   }
 
   @override
-  _i4.Future<_i2.Result<_i5.LocationEntity>> getCurrentLocation() =>
+  _i4.Future<_i5.LocationResult> getCurrentLocationWithPermission() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentLocationWithPermission, []),
+            returnValue: _i4.Future<_i5.LocationResult>.value(
+              _i6.dummyValue<_i5.LocationResult>(
+                this,
+                Invocation.method(#getCurrentLocationWithPermission, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i5.LocationResult>);
+
+  @override
+  _i4.Future<_i2.Result<_i7.LocationEntity>> getCurrentLocation() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentLocation, []),
-            returnValue: _i4.Future<_i2.Result<_i5.LocationEntity>>.value(
-              _FakeResult_0<_i5.LocationEntity>(
+            returnValue: _i4.Future<_i2.Result<_i7.LocationEntity>>.value(
+              _FakeResult_0<_i7.LocationEntity>(
                 this,
                 Invocation.method(#getCurrentLocation, []),
               ),
             ),
           )
-          as _i4.Future<_i2.Result<_i5.LocationEntity>>);
+          as _i4.Future<_i2.Result<_i7.LocationEntity>>);
 
   @override
-  _i4.Stream<_i5.LocationEntity> getLocationStream() =>
+  _i4.Stream<_i7.LocationEntity> getLocationStream() =>
       (super.noSuchMethod(
             Invocation.method(#getLocationStream, []),
-            returnValue: _i4.Stream<_i5.LocationEntity>.empty(),
+            returnValue: _i4.Stream<_i7.LocationEntity>.empty(),
           )
-          as _i4.Stream<_i5.LocationEntity>);
+          as _i4.Stream<_i7.LocationEntity>);
 
   @override
-  _i4.Future<_i2.Result<_i6.LocationPermissionStatus>> checkPermission() =>
+  _i4.Future<_i2.Result<_i8.LocationPermissionStatus>> checkPermission() =>
       (super.noSuchMethod(
             Invocation.method(#checkPermission, []),
             returnValue:
-                _i4.Future<_i2.Result<_i6.LocationPermissionStatus>>.value(
-                  _FakeResult_0<_i6.LocationPermissionStatus>(
+                _i4.Future<_i2.Result<_i8.LocationPermissionStatus>>.value(
+                  _FakeResult_0<_i8.LocationPermissionStatus>(
                     this,
                     Invocation.method(#checkPermission, []),
                   ),
                 ),
           )
-          as _i4.Future<_i2.Result<_i6.LocationPermissionStatus>>);
+          as _i4.Future<_i2.Result<_i8.LocationPermissionStatus>>);
 
   @override
-  _i4.Future<_i2.Result<_i6.LocationPermissionStatus>> requestPermission() =>
-      (super.noSuchMethod(
-            Invocation.method(#requestPermission, []),
-            returnValue:
-                _i4.Future<_i2.Result<_i6.LocationPermissionStatus>>.value(
-                  _FakeResult_0<_i6.LocationPermissionStatus>(
-                    this,
-                    Invocation.method(#requestPermission, []),
-                  ),
-                ),
-          )
-          as _i4.Future<_i2.Result<_i6.LocationPermissionStatus>>);
-
-  @override
-  _i4.Future<_i2.Result<bool>> openAppSettings() =>
+  _i4.Future<bool> openAppSettings() =>
       (super.noSuchMethod(
             Invocation.method(#openAppSettings, []),
-            returnValue: _i4.Future<_i2.Result<bool>>.value(
-              _FakeResult_0<bool>(
-                this,
-                Invocation.method(#openAppSettings, []),
-              ),
-            ),
+            returnValue: _i4.Future<bool>.value(false),
           )
-          as _i4.Future<_i2.Result<bool>>);
+          as _i4.Future<bool>);
 
   @override
-  _i4.Future<_i2.Result<bool>> openLocationSettings() =>
+  _i4.Future<bool> openLocationSettings() =>
       (super.noSuchMethod(
             Invocation.method(#openLocationSettings, []),
-            returnValue: _i4.Future<_i2.Result<bool>>.value(
-              _FakeResult_0<bool>(
-                this,
-                Invocation.method(#openLocationSettings, []),
-              ),
-            ),
+            returnValue: _i4.Future<bool>.value(false),
           )
-          as _i4.Future<_i2.Result<bool>>);
+          as _i4.Future<bool>);
 
   @override
   double calculateDistance(
-    _i5.LocationEntity? start,
-    _i5.LocationEntity? end,
+    _i7.LocationEntity? start,
+    _i7.LocationEntity? end,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#calculateDistance, [start, end]),

@@ -5,8 +5,14 @@ import 'package:location_tracking/src/domain/entities/place_prediction_entity.da
 /// Repository for Google Places API operations.
 abstract class PlacesRepository {
   /// Searches for place predictions based on the input text.
-  FutureResult<List<PlacePredictionEntity>> searchPlaces(String query);
+  FutureResult<List<PlacePredictionEntity>> searchPlaces(
+    String query, {
+    String? sessionToken,
+  });
 
   /// Gets detailed information about a place by its ID.
-  FutureResult<PlaceDetailsEntity> getPlaceDetails(String placeId);
+  FutureResult<PlaceDetailsEntity> getPlaceDetails(
+    String placeId, {
+    String? sessionToken,
+  });
 }

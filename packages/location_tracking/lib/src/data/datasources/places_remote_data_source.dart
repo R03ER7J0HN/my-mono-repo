@@ -17,14 +17,16 @@ abstract class PlacesRemoteDataSource {
   Future<HttpResponse<PlacesPredictionResponseModel>> searchPlaces({
     @Query('input') required String query,
     @Query('key') required String apiKey,
+    @Query('sessiontoken') String? sessionToken,
     @Query('components') String components = 'country:ph',
   });
 
   /// Gets detailed information about a place by its ID.
   @GET('/details/json')
-  Future<HttpResponse<PlaceDetailsModel>> getPlaceDetails({
+  Future<HttpResponse<PlaceDetailsResponseModel>> getPlaceDetails({
     @Query('place_id') required String placeId,
     @Query('key') required String apiKey,
+    @Query('sessiontoken') String? sessionToken,
     @Query('fields') String fields = 'place_id,geometry,formatted_address,name',
   });
 }

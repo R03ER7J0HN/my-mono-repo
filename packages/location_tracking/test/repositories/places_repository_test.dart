@@ -53,7 +53,7 @@ void main() {
     secondaryText: tSecondaryText,
   );
 
-  const tDetailsModel = PlaceDetailsModel(
+  const tDetailsEntity = PlaceDetailsEntity(
     placeId: tPlaceId,
     latitude: tLatitude,
     longitude: tLongitude,
@@ -61,12 +61,18 @@ void main() {
     name: tMainText,
   );
 
-  const tDetailsEntity = PlaceDetailsEntity(
-    placeId: tPlaceId,
-    latitude: tLatitude,
-    longitude: tLongitude,
-    formattedAddress: tFormattedAddress,
-    name: tMainText,
+  const tDetailsModel = PlaceDetailsResponseModel(
+    result: PlaceDetailsResultModel(
+      placeId: tPlaceId,
+      name: tMainText,
+      geometry: GeometryModel(
+        location: LocationModel(
+          lat: tLatitude,
+          lng: tLongitude,
+        ),
+      ),
+      formattedAddress: tFormattedAddress,
+    ),
   );
 
   group('PlacesRepositoryImpl', () {
