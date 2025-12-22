@@ -34,6 +34,8 @@ dependencies:
   job_application:
     path: ../../packages/job_application
   json_annotation: ^4.9.0
+  location_tracking:
+    path: ../../packages/location_tracking
   notification:
     path: ../../packages/notification
   percent_indicator: ^4.2.5

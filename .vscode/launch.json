@@ -1,33 +1,50 @@
 {
+  // =============================================================================
+  // VS Code Launch Configurations
+  // =============================================================================
+  //
+  // PREREQUISITES:
+  //   1. Copy secrets.json.example to secrets.json in the app directory
+  //   2. Fill in your API keys in secrets.json
+  //   3. Run: ./scripts/generate_secrets.sh (generates native config files)
+  //
+  // The --dart-define-from-file flag passes secrets to Dart code at compile time.
+  // Native code (iOS/Android) reads from generated xcconfig/properties files.
+  //
+  // NOTE: Native logs like "FrameEvents: updateAcquireFence" and
+  // "ProxyAndroidLoggerBackend" are from Google Maps SDK and are harmless.
+  // VS Code debug console doesn't support log filtering. To filter these,
+  // run manually in terminal: flutter run 2>&1 | grep -v "FrameEvents\|ProxyAndroidLoggerBackend"
+  // =============================================================================
+
+  "version": "0.2.0",
   "configurations": [
     {
-      "name": "my-mono-repo (root)",
+      "name": "Job Tracker (debug)",
+      "type": "dart",
       "request": "launch",
-      "type": "dart"
-    },
-    {
-      "cwd": "${input:pickPackage}",
+      "cwd": "apps/job_application_tracker",
       "flutterMode": "debug",
-      "name": "Select App (debug)",
-      "request": "launch",
-      "type": "dart"
+      "toolArgs": ["--dart-define-from-file=secrets.json"],
+      "preLaunchTask": "generate-secrets"
     },
     {
-      "cwd": "${input:pickPackage}",
-      "flutterMode": "release",
-      "name": "Select App (release)",
+      "name": "Job Tracker (release)",
+      "type": "dart",
       "request": "launch",
-      "type": "dart"
-    }
-  ],
-  "inputs": [
+      "cwd": "apps/job_application_tracker",
+      "flutterMode": "release",
+      "toolArgs": ["--dart-define-from-file=secrets.json"],
+      "preLaunchTask": "generate-secrets"
+    },
     {
-      "default": "apps/job_application_tracker",
-      "description": "Select the package to launch",
-      "id": "pickPackage",
-      "options": ["apps/job_application_tracker"],
-      "type": "pickString"
+      "name": "Job Tracker (profile)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/job_application_tracker",
+      "flutterMode": "profile",
+      "toolArgs": ["--dart-define-from-file=secrets.json"],
+      "preLaunchTask": "generate-secrets"
     }
-  ],
-  "version": "0.2.0"
+  ]
 }

@@ -21,7 +21,7 @@ void main() async => await initializeMainApp();
 Future<void> initializeMainApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Injector.initialize();
+  await Injector.initialize();
 
   FirebaseMessaging.onBackgroundMessage(
     BackgroundNotificationHandler.handleFirebaseMessaging,

@@ -12,6 +12,7 @@ import 'package:job_application_tracker/widgets/form/app_dropdown.dart';
 import 'package:job_application_tracker/widgets/form/app_text_field.dart';
 import 'package:job_application_tracker/widgets/glass_card.dart';
 import 'package:job_application_tracker/widgets/shimmer_box.dart';
+import 'package:location_tracking/location_tracking.dart';
 
 class JobForm extends StatefulWidget {
   const JobForm({
@@ -54,6 +55,7 @@ class JobForm extends StatefulWidget {
       JobFormKeys.currency: job.currency ?? defaultCurrency,
       JobFormKeys.notes: job.notes,
       JobFormKeys.status: job.status,
+      JobFormKeys.location: job.location,
     };
   }
 
@@ -64,6 +66,7 @@ class JobForm extends StatefulWidget {
 class _JobFormState extends State<JobForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _currencySymbol = ValueNotifier<String>(r'$');
+  JobLocationEntity? _selectedLocation;
 
   bool get _isEditing => widget.job != null;
   Map<String, dynamic> get _initialValues => widget.initialValues;
@@ -77,6 +80,9 @@ class _JobFormState extends State<JobForm> {
     if (currency != null) {
       _currencySymbol.value = currency.symbol;
     }
+
+    _selectedLocation =
+        _initialValues[JobFormKeys.location] as JobLocationEntity?;
   }
 
   @override
@@ -91,6 +97,42 @@ class _JobFormState extends State<JobForm> {
         : JobPlatform.fromUrl(value);
 
     _formKey.currentState?.fields[JobFormKeys.platform]?.didChange(platform);
+  }
+
+  Future<void> _onSelectLocation() async {
+    final initialLoc = _selectedLocation;
+    LocationEntity? initialLocationEntity;
+
+    if (initialLoc != null &&
+        initialLoc.latitude != null &&
+        initialLoc.longitude != null) {
+      initialLocationEntity = LocationEntity(
+        latitude: initialLoc.latitude!,
+        longitude: initialLoc.longitude!,
+      );
+    }
+
+    final result = await LocationPicker.show(
+      context,
+      initialLocation: initialLocationEntity,
+      initialAddress: initialLoc?.address,
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedLocation = JobLocationEntity(
+          address: result.address ?? '',
+          latitude: result.latitude,
+          longitude: result.longitude,
+        );
+      });
+    }
+  }
+
+  void _onClearLocation() {
+    setState(() {
+      _selectedLocation = null;
+    });
   }
 
   void _onSubmit() {
@@ -111,6 +153,7 @@ class _JobFormState extends State<JobForm> {
         employmentType: formData[JobFormKeys.employmentType] as EmploymentType,
         dateApplied: formData[JobFormKeys.dateApplied] as DateTime,
         recruiterName: formData[JobFormKeys.recruiterName] as String?,
+        location: _selectedLocation,
         salaryRequested: formData[JobFormKeys.salaryRequested] != null
             ? int.tryParse(
                 formData[JobFormKeys.salaryRequested] as String,
@@ -208,6 +251,8 @@ class _JobFormState extends State<JobForm> {
                         name: JobFormKeys.dateApplied,
                         label: 'Date Applied',
                       ),
+                      const SizedBox(height: 16),
+                      _buildLocationField(),
                       const SizedBox(height: 24),
                       _buildSectionTitle('Additional Information'),
                       const SizedBox(height: 16),
@@ -231,9 +276,52 @@ class _JobFormState extends State<JobForm> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          _buildSubmitButton(context),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: _buildSubmitButton(context),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLocationField() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final hasLocation = _selectedLocation != null;
+
+    return InkWell(
+      onTap: _onSelectLocation,
+      borderRadius: BorderRadius.circular(12),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: 'Company Location (Optional)',
+          prefixIcon: Icon(
+            Icons.location_on,
+            color: hasLocation ? colorScheme.primary : null,
+          ),
+          suffixIcon: hasLocation
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: _onClearLocation,
+                )
+              : const Icon(Icons.chevron_right),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          hasLocation
+              ? _selectedLocation!.address.isNotEmpty
+                    ? _selectedLocation!.address
+                    : 'Location selected'
+              : 'Tap to select location',
+          style: TextStyle(
+            color: hasLocation
+                ? colorScheme.onSurface
+                : colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
       ),
     );
   }

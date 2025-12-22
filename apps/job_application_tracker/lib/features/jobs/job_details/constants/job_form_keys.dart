@@ -13,4 +13,5 @@ class JobFormKeys {
   static const String salaryRequested = 'salaryRequested';
   static const String currency = 'currency';
   static const String notes = 'notes';
+  static const String location = 'location';
 }
