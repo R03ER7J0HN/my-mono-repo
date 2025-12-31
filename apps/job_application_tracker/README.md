@@ -23,6 +23,13 @@ The primary Flutter application in this monorepo, designed to help users track a
   - Recruiter contact information
   - Location with Google Maps integration
   - Personal notes
+- **Job Interviews** (`features/jobs/job_interviews/`): Schedule and manage interviews for each job:
+  - Interview list per job application
+  - Create/edit interview with title, date, time, and duration
+  - Meeting URL for virtual interviews
+  - Physical location for in-person interviews
+  - Calendar integration (add to device calendar)
+  - Personal notes
 
 ### Home Dashboard (`features/home/`)
 - Overview of application statistics
@@ -47,9 +54,12 @@ The primary Flutter application in this monorepo, designed to help users track a
 This app consumes the following workspace packages:
 - `flutter_core` — Result types, extensions, error handling
 - `authentication` — Firebase Auth integration
-- `job_application` — Job entities and Firestore repository
+- `job_application` — Job entities, interviews, and Firestore repository
 - `location_tracking` — Geolocation and Google Maps
 - `notification` — Push notifications (FCM)
+
+External packages of note:
+- `add_2_calendar` — Native calendar integration for interview scheduling
 
 ## 🚀 Getting Started
 

@@ -45,6 +45,27 @@
       "flutterMode": "profile",
       "toolArgs": ["--dart-define-from-file=secrets.json"],
       "preLaunchTask": "generate-secrets"
+    },
+    {
+      "name": "Budget Tracker (debug)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/budget_tracker",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Budget Tracker (release)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/budget_tracker",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Budget Tracker (profile)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/budget_tracker",
+      "flutterMode": "profile"
     }
   ]
 }

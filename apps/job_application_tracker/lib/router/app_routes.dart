@@ -6,7 +6,9 @@ enum AppRoutes {
   forgotPassword('forgot-password'),
   profile('/profile'),
   jobs('/jobs'),
-  jobEntry('/job-entry');
+  jobEntry('/job-entry'),
+  interviews('/interviews'),
+  interviewEntry('/interview-entry');
 
   const AppRoutes(this.path);
 

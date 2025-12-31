@@ -99,6 +99,14 @@ class _JobListViewState extends State<_JobListView> {
                                       ),
                                     );
                                   },
+                                  onInterviewsTap: () {
+                                    unawaited(
+                                      AppNavigator.pushInterviewList(
+                                        context,
+                                        job: job,
+                                      ),
+                                    );
+                                  },
                                   onDismissed: (job) {
                                     unawaited(context.cubit.deleteJob(job));
                                   },

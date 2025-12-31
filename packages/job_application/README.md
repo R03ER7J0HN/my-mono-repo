@@ -20,6 +20,14 @@ A dedicated feature package responsible for the domain logic and data management
 - Location with coordinates (lat/long) and place ID
 - Personal notes
 
+### Job Interview Entity
+- Title (e.g., "Technical Interview", "HR Screening")
+- Start and end time for calendar integration
+- Meeting URL for virtual interviews
+- Physical location for in-person interviews
+- Personal notes
+- Calendar sync status tracking
+
 ### Job Platforms Supported
 - LinkedIn
 - Indeed
@@ -36,17 +44,44 @@ A dedicated feature package responsible for the domain logic and data management
 - Get all applications for user
 - Real-time stream of job applications
 
+### Interview Repository Operations
+- Create job interview (under specific job application)
+- Update job interview
+- Delete job interview
+- Real-time stream of interviews for a job
+- Get upcoming interviews across all jobs
+
 ## 🏗️ Architecture
 
 This package follows **Clean Architecture** with a Domain-Data split:
 
 | Layer | Component | Role |
 |-------|-----------|------|
-| **Domain** | `JobApplicationRepository` | Abstract interface for CRUD operations |
+| **Domain** | `JobApplicationRepository` | Abstract interface for job CRUD operations |
+| **Domain** | `JobInterviewRepository` | Abstract interface for interview CRUD operations |
 | **Domain** | `JobApplicationEntity` | Immutable job application representation |
+| **Domain** | `JobInterviewEntity` | Immutable interview representation |
 | **Domain** | `JobLocationEntity` | Location with address and coordinates |
-| **Data** | `FirestoreJobApplicationRepository` | Cloud Firestore implementation |
-| **Data** | `JobApplicationModel` | DTO for Firestore serialization |
+| **Data** | `FirestoreJobApplicationRepository` | Cloud Firestore implementation for jobs |
+| **Data** | `FirestoreJobInterviewRepository` | Cloud Firestore implementation for interviews |
+| **Data** | `JobApplicationModel` | DTO for job Firestore serialization |
+| **Data** | `JobInterviewModel` | DTO for interview Firestore serialization |
+
+### Firestore Data Structure
+
+```
+users/{userId}/
+└── job_applications/{jobId}/
+    ├── (job application fields)
+    └── interviews/{interviewId}/
+        ├── title
+        ├── startTime
+        ├── endTime
+        ├── meetingUrl
+        ├── location
+        ├── notes
+        └── addedToCalendar
+```
 
 ## 📦 Installation
 

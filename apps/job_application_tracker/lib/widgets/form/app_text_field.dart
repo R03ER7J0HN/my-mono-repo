@@ -9,6 +9,7 @@ class AppTextField extends StatelessWidget {
     super.key,
     this.icon,
     this.prefixText,
+    this.hintText,
     this.validator,
     this.keyboardType,
     this.inputFormatters,
@@ -23,6 +24,7 @@ class AppTextField extends StatelessWidget {
   final String label;
   final IconData? icon;
   final String? prefixText;
+  final String? hintText;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
@@ -60,6 +62,7 @@ class AppTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+        hintText: hintText,
       ),
       onChanged: (value) {
         onChanged?.call(value);

@@ -5,9 +5,14 @@ import 'package:job_application_tracker/features/jobs/job_list/widgets/status_ch
 import 'package:job_application_tracker/widgets/glass_card.dart';
 
 class JobListItem extends StatelessWidget {
-  const JobListItem({required this.job, super.key});
+  const JobListItem({
+    required this.job,
+    this.onInterviewsTap,
+    super.key,
+  });
 
   final JobApplicationEntity job;
+  final VoidCallback? onInterviewsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +56,11 @@ class JobListItem extends StatelessWidget {
             children: [
               StatusChip(status: job.status),
               const Spacer(),
-              if (job.platform != JobPlatform.other)
+              if (onInterviewsTap != null) _buildInterviewsButton(context),
+              if (job.platform != JobPlatform.other) ...[
+                if (onInterviewsTap != null) const SizedBox(width: 8),
                 _buildPlatformBadge(context),
+              ],
             ],
           ),
         ],
@@ -115,6 +123,38 @@ class JobListItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInterviewsButton(BuildContext context) {
+    return GestureDetector(
+      onTap: onInterviewsTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Theme.of(
+            context,
+          ).colorScheme.primaryContainer.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.event,
+              size: 12,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              'Interviews',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'package:job_application_tracker/application/di/injector.dart';
 import 'package:job_application_tracker/application/notification/background_notification_handler.dart';
 import 'package:job_application_tracker/features/auth/l10n/gen/app_localizations.dart';
 import 'package:job_application_tracker/features/home/l10n/gen/app_localizations.dart';
+import 'package:job_application_tracker/features/jobs/job_interviews/l10n/gen/app_localizations.dart';
 import 'package:job_application_tracker/features/splash/l10n/gen/app_localizations.dart';
 import 'package:job_application_tracker/router/app_router.dart';
 import 'package:job_application_tracker/theme/app_theme.dart';
@@ -56,6 +57,7 @@ class MainApp extends StatelessWidget {
     localizationsDelegates: const [
       AuthLocalizations.delegate,
       HomeLocalizations.delegate,
+      JobInterviewsLocalizations.delegate,
       SplashLocalizations.delegate,
 
       // App-specific localization delegate[s] here

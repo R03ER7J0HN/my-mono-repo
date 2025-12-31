@@ -24,4 +24,26 @@ class AppNavigator {
     BuildContext context, {
     JobApplicationEntity? job,
   }) => context.pushNamed(AppRoutes.jobEntry.name, extra: job);
+
+  static FutureOr<T?> pushInterviewList<T>(
+    BuildContext context, {
+    required JobApplicationEntity job,
+  }) => context.pushNamed(AppRoutes.interviews.name, extra: job);
+
+  static FutureOr<T?> pushInterviewEntry<T>(
+    BuildContext context, {
+    required JobApplicationEntity job,
+    JobInterviewEntity? interview,
+  }) => context.pushNamed(
+    AppRoutes.interviewEntry.name,
+    extra: InterviewEntryArgs(job: job, interview: interview),
+  );
+}
+
+/// Arguments for the interview entry screen.
+class InterviewEntryArgs {
+  const InterviewEntryArgs({required this.job, this.interview});
+
+  final JobApplicationEntity job;
+  final JobInterviewEntity? interview;
 }

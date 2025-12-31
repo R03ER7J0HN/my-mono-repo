@@ -5,11 +5,13 @@ environment:
 
 workspace:
   - apps/job_application_tracker
+  - apps/budget_tracker
   - packages/flutter_core
   - packages/authentication
   - packages/notification
   - packages/location_tracking
   - packages/job_application
+  - packages/budget_core
 
 dev_dependencies:
   melos: ^7.3.0

@@ -40,6 +40,7 @@ class DismissibleJobItem extends StatefulWidget {
     required this.job,
     required this.controller,
     this.onTap,
+    this.onInterviewsTap,
     this.onDismissed,
     super.key,
   });
@@ -47,6 +48,7 @@ class DismissibleJobItem extends StatefulWidget {
   final JobApplicationEntity job;
   final SwipeToDeleteController controller;
   final VoidCallback? onTap;
+  final VoidCallback? onInterviewsTap;
   final void Function(JobApplicationEntity job)? onDismissed;
 
   @override
@@ -134,7 +136,10 @@ class _DismissibleJobItemState extends State<DismissibleJobItem> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 100),
             transform: Matrix4.translationValues(-offset, 0, 0),
-            child: JobListItem(job: widget.job),
+            child: JobListItem(
+              job: widget.job,
+              onInterviewsTap: widget.onInterviewsTap,
+            ),
           ),
         ],
       ),

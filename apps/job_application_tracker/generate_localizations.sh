@@ -7,12 +7,17 @@ set -e
 RED='\033[31m'
 RESET='\033[0m'
 
-# List of features
-FEATURES=("auth" "home" "splash")
+# List of features (feature_path:class_name)
+# For nested paths, specify the class name explicitly
+FEATURES=("auth:Auth" "home:Home" "splash:Splash" "jobs/job_interviews:JobInterviews")
 
 # Loop through each feature
-for FEATURE in "${FEATURES[@]}"
+for ENTRY in "${FEATURES[@]}"
 do
+    # Split the entry by ':'
+    FEATURE="${ENTRY%%:*}"
+    CLASS_NAME="${ENTRY##*:}"
+    
     ARB_DIR="lib/features/$FEATURE/l10n"
     OUTPUT_DIR="lib/features/$FEATURE/l10n/gen"
     
@@ -38,7 +43,7 @@ do
       --output-dir="$OUTPUT_DIR" \
       --template-arb-file="$(basename "$TEMPLATE")" \
       --no-nullable-getter \
-      --output-class="$(tr '[:lower:]' '[:upper:]' <<< ${FEATURE:0:1})${FEATURE:1}Localizations"; then
+      --output-class="${CLASS_NAME}Localizations"; then
         echo -e "${RED}Error: Flutter gen-l10n failed for feature '$FEATURE'. Stopping.${RESET}"
         exit 1
     fi

@@ -10,9 +10,12 @@ import 'package:job_application_tracker/features/auth/sign_in/sign_in_screen.dar
 import 'package:job_application_tracker/features/auth/sign_up/sign_up_screen.dart';
 import 'package:job_application_tracker/features/home/home_screen.dart';
 import 'package:job_application_tracker/features/jobs/job_details/job_entry_screen.dart';
+import 'package:job_application_tracker/features/jobs/job_interviews/interview_entry/interview_entry_screen.dart';
+import 'package:job_application_tracker/features/jobs/job_interviews/interview_list/interview_list_screen.dart';
 import 'package:job_application_tracker/features/jobs/job_list/job_list_screen.dart';
 import 'package:job_application_tracker/features/profile/profile_screen.dart';
 import 'package:job_application_tracker/features/splash/splash_screen.dart';
+import 'package:job_application_tracker/router/app_navigator.dart';
 import 'package:job_application_tracker/router/app_routes.dart';
 import 'package:job_application_tracker/widgets/navigation/navigation_item.dart';
 import 'package:job_application_tracker/widgets/navigation/scaffold_with_nav_bar.dart';
@@ -102,6 +105,25 @@ class AppRouter {
         builder: (context, state) {
           final job = state.extra as JobApplicationEntity?;
           return JobEntryScreen(job: job);
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.interviews.name,
+        path: AppRoutes.interviews.path,
+        builder: (context, state) {
+          final job = state.extra! as JobApplicationEntity;
+          return InterviewListScreen(job: job);
+        },
+      ),
+      GoRoute(
+        name: AppRoutes.interviewEntry.name,
+        path: AppRoutes.interviewEntry.path,
+        builder: (context, state) {
+          final args = state.extra! as InterviewEntryArgs;
+          return InterviewEntryScreen(
+            job: args.job,
+            interview: args.interview,
+          );
         },
       ),
     ],
