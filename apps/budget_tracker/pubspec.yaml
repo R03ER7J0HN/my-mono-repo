@@ -1,0 +1,43 @@
+name: budget_tracker
+description: A personal budget tracking application.
+publish_to: "none"
+resolution: workspace
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  budget_core:
+  cupertino_icons: ^1.0.8
+  equatable: ^2.0.7
+  fl_chart: ^0.70.2
+  flex_color_picker: ^3.6.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.0
+  flutter_core:
+  flutter_form_builder: ^10.0.1
+  flutter_localizations:
+    sdk: flutter
+  form_builder_validators: ^11.1.0
+  freezed_annotation: ^3.0.0
+  get_it: ^9.0.5
+  go_router: ^17.0.0
+  intl: ^0.20.2
+  json_annotation: ^4.9.0
+  uuid: ^4.5.1
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  build_runner: ^2.4.15
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
+  mockito: ^5.4.6
+  very_good_analysis: ^10.0.0
+
+flutter:
+  uses-material-design: true
