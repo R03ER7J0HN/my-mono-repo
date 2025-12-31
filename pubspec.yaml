@@ -5,6 +5,8 @@ environment:
 
 workspace:
   - apps/job_application_tracker
+  - apps/budget_tracker
+  - packages/budget_core
   - packages/flutter_core
   - packages/authentication
   - packages/notification
