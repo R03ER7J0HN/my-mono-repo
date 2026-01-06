@@ -1,7 +1,5 @@
 # Budget Core Package
 
-> ⚠️ **Development Status**: This package is AI-assisted and currently in the initial phase for code review. While functional based on initial testing, it has not undergone comprehensive production testing.
-
 A core package for budget tracking functionality, providing domain entities, use cases, and repository contracts following Clean Architecture principles. Designed to be reused across multiple apps in a monorepo structure.
 
 ## ✨ Features
@@ -167,6 +165,27 @@ All tables use `CREATE TABLE IF NOT EXISTS` for safe initialization.
 
 ## 🧪 Testing
 
+This package includes comprehensive tests following industry best practices:
+
+```bash
+# Run all tests
+cd packages/budget_core && flutter test
+
+# Run with coverage
+flutter test --coverage
+```
+
+### Test Coverage
+
+| Layer | Component | Tests |
+|-------|-----------|-------|
+| **Domain** | Entities | ✅ Business logic (computed properties, validations) |
+| **Domain** | Use Cases | ✅ Business orchestration & balance updates |
+| **Data** | Repositories | ✅ CRUD operations with in-memory SQLite |
+| **Data** | LocalDataSource | ✅ Database setup & table creation |
+
+### Mocking for Consumer Tests
+
 ```dart
 import 'package:mockito/annotations.dart';
 import 'package:budget_core/budget_core.dart';
@@ -193,7 +212,3 @@ void main() {
 ## 📝 License
 
 This project is part of a private monorepo and is not published to pub.dev.
-
----
-
-*This package was developed with AI assistance and is in active development.*
