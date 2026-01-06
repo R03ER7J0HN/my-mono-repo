@@ -1,33 +1,22 @@
 /// Types of financial accounts supported
 enum AccountType {
   /// Physical cash
-  cash,
+  cash('Cash'),
 
   /// Bank debit card
-  debitCard,
+  debitCard('Debit Card'),
 
   /// Credit card with limit
-  creditCard,
+  creditCard('Credit Card'),
 
   /// E-wallet (GCash, PayMaya, etc.)
-  eWallet,
+  eWallet('E-Wallet'),
 
   /// Savings account
-  savings;
+  savings('Savings');
+
+  const AccountType(this.displayName);
 
   /// Display name for UI
-  String get displayName {
-    switch (this) {
-      case AccountType.cash:
-        return 'Cash';
-      case AccountType.debitCard:
-        return 'Debit Card';
-      case AccountType.creditCard:
-        return 'Credit Card';
-      case AccountType.eWallet:
-        return 'E-Wallet';
-      case AccountType.savings:
-        return 'Savings';
-    }
-  }
+  final String displayName;
 }

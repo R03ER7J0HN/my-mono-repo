@@ -14,8 +14,12 @@ CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
       colorHex: json['color_hex'] as String,
       isSystem: json['is_system'] == null
           ? false
-          : JsonConverters.boolFromInt((json['is_system'] as num).toInt()),
-      createdAt: json['created_at'] as String?,
+          : const BoolToIntConverter().fromJson(
+              (json['is_system'] as num).toInt(),
+            ),
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
@@ -24,6 +28,6 @@ Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
       'name': instance.name,
       'icon_code_point': instance.iconCodePoint,
       'color_hex': instance.colorHex,
-      'is_system': JsonConverters.boolToInt(instance.isSystem),
-      'created_at': instance.createdAt,
+      'is_system': const BoolToIntConverter().toJson(instance.isSystem),
+      'created_at': instance.createdAt?.toIso8601String(),
     };

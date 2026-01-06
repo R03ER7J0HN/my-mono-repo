@@ -13,11 +13,13 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       amount: (json['amount'] as num).toDouble(),
       description: json['description'] as String,
-      date: json['date'] as String,
+      date: DateTime.parse(json['date'] as String),
       toAccountId: json['to_account_id'] as String?,
       categoryId: json['category_id'] as String?,
       notes: json['notes'] as String?,
-      createdAt: json['created_at'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
@@ -27,9 +29,9 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'type': instance.type,
       'amount': instance.amount,
       'description': instance.description,
-      'date': instance.date,
+      'date': instance.date.toIso8601String(),
       'to_account_id': instance.toAccountId,
       'category_id': instance.categoryId,
       'notes': instance.notes,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
     };

@@ -18,8 +18,10 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) => AccountModel(
   colorHex: json['color_hex'] as String?,
   isActive: json['is_active'] == null
       ? true
-      : JsonConverters.boolFromInt((json['is_active'] as num).toInt()),
-  createdAt: json['created_at'] as String?,
+      : const BoolToIntConverter().fromJson((json['is_active'] as num).toInt()),
+  createdAt: json['created_at'] == null
+      ? null
+      : DateTime.parse(json['created_at'] as String),
 );
 
 Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
@@ -33,6 +35,6 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'warning_threshold': instance.warningThreshold,
       'icon_name': instance.iconName,
       'color_hex': instance.colorHex,
-      'is_active': JsonConverters.boolToInt(instance.isActive),
-      'created_at': instance.createdAt,
+      'is_active': const BoolToIntConverter().toJson(instance.isActive),
+      'created_at': instance.createdAt?.toIso8601String(),
     };

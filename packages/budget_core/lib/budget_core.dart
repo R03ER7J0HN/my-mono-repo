@@ -4,24 +4,8 @@
 /// contracts that can be reused across multiple apps.
 library;
 
-import 'package:budget_core/src/data/datasources/local_data_source.dart';
-import 'package:budget_core/src/data/repositories/account_repository_impl.dart';
-import 'package:budget_core/src/data/repositories/category_repository_impl.dart';
-import 'package:budget_core/src/data/repositories/installment_repository_impl.dart';
-import 'package:budget_core/src/data/repositories/monthly_budget_repository_impl.dart';
-import 'package:budget_core/src/data/repositories/transaction_repository_impl.dart';
-import 'package:budget_core/src/domain/repositories/account_repository.dart';
-import 'package:budget_core/src/domain/repositories/category_repository.dart';
-import 'package:budget_core/src/domain/repositories/installment_repository.dart';
-import 'package:budget_core/src/domain/repositories/monthly_budget_repository.dart';
-import 'package:budget_core/src/domain/repositories/transaction_repository.dart';
-import 'package:budget_core/src/domain/use_cases/delete_transaction_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/get_all_transactions_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/get_transaction_by_id_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/get_transactions_by_account_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/reset_all_data_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/save_transaction_use_case.dart';
-import 'package:budget_core/src/domain/use_cases/watch_transactions_use_case.dart';
+import 'package:budget_core/src/data/data.dart';
+import 'package:budget_core/src/domain/domain.dart';
 import 'package:get_it/get_it.dart';
 
 export 'src/data/data.dart';
@@ -33,24 +17,29 @@ class BudgetCore {
 
   /// Initialize all budget core dependencies
   static Future<void> initialize(GetIt instance) async {
-    final dataSource = await LocalDataSource.createDatabase();
+    final datasource = await LocalDataSource.createDatabase();
 
     instance
-      ..registerSingleton<LocalDataSource>(dataSource)
+      ..registerLazySingleton<LocalDataSource>(
+        () => datasource,
+      )
       ..registerLazySingleton<AccountRepository>(
-        () => AccountRepositoryImpl(dataSource),
+        () => AccountRepositoryImpl(instance<LocalDataSource>()),
       )
       ..registerLazySingleton<TransactionRepository>(
-        () => TransactionRepositoryImpl(dataSource),
+        () => TransactionRepositoryImpl(instance<LocalDataSource>()),
       )
       ..registerLazySingleton<InstallmentRepository>(
-        () => InstallmentRepositoryImpl(dataSource),
+        () => InstallmentRepositoryImpl(instance<LocalDataSource>()),
       )
       ..registerLazySingleton<CategoryRepository>(
-        () => CategoryRepositoryImpl(dataSource),
+        () => CategoryRepositoryImpl(instance<LocalDataSource>()),
       )
       ..registerLazySingleton<MonthlyBudgetRepository>(
-        () => MonthlyBudgetRepositoryImpl(dataSource),
+        () => MonthlyBudgetRepositoryImpl(instance<LocalDataSource>()),
+      )
+      ..registerLazySingleton<AppDataRepository>(
+        () => AppDataRepositoryImpl(instance<LocalDataSource>()),
       )
       ..registerLazySingleton<SaveTransactionUseCase>(
         () => SaveTransactionUseCase(
@@ -63,22 +52,6 @@ class BudgetCore {
           transactionRepository: instance<TransactionRepository>(),
           accountRepository: instance<AccountRepository>(),
         ),
-      )
-      ..registerLazySingleton<GetAllTransactionsUseCase>(
-        () => GetAllTransactionsUseCase(instance<TransactionRepository>()),
-      )
-      ..registerLazySingleton<GetTransactionByIdUseCase>(
-        () => GetTransactionByIdUseCase(instance<TransactionRepository>()),
-      )
-      ..registerLazySingleton<GetTransactionsByAccountUseCase>(
-        () =>
-            GetTransactionsByAccountUseCase(instance<TransactionRepository>()),
-      )
-      ..registerLazySingleton<WatchTransactionsUseCase>(
-        () => WatchTransactionsUseCase(instance<TransactionRepository>()),
-      )
-      ..registerLazySingleton<ResetAllDataUseCase>(
-        () => ResetAllDataUseCase(dataSource),
       );
   }
 }

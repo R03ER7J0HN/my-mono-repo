@@ -1,23 +1,16 @@
 /// Payment frequency for installments
 enum InstallmentFrequency {
   /// Monthly payments
-  monthly,
+  monthly('Monthly'),
 
   /// Quarterly payments
-  quarterly,
+  quarterly('Quarterly'),
 
   /// Yearly payments
-  yearly;
+  yearly('Yearly');
+
+  const InstallmentFrequency(this.displayName);
 
   /// Display name for UI
-  String get displayName {
-    switch (this) {
-      case InstallmentFrequency.monthly:
-        return 'Monthly';
-      case InstallmentFrequency.quarterly:
-        return 'Quarterly';
-      case InstallmentFrequency.yearly:
-        return 'Yearly';
-    }
-  }
+  final String displayName;
 }

@@ -26,4 +26,5 @@ dev_dependencies:
   freezed: ^3.0.6
   json_serializable: ^6.9.5
   mockito: ^5.4.6
+  sqflite_common_ffi: ^2.3.4+4
   very_good_analysis: ^10.0.0

@@ -30,11 +30,11 @@ class TransactionModel extends Equatable {
         type: entity.type.name,
         amount: entity.amount,
         description: entity.description,
-        date: entity.date.toIso8601String(),
+        date: entity.date,
         toAccountId: entity.toAccountId,
         categoryId: entity.categoryId,
         notes: entity.notes,
-        createdAt: entity.createdAt?.toIso8601String(),
+        createdAt: entity.createdAt,
       );
 
   final String id;
@@ -45,7 +45,8 @@ class TransactionModel extends Equatable {
   final String type;
   final double amount;
   final String description;
-  final String date;
+
+  final DateTime date;
 
   @JsonKey(name: 'to_account_id')
   final String? toAccountId;
@@ -56,7 +57,7 @@ class TransactionModel extends Equatable {
   final String? notes;
 
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
@@ -69,11 +70,11 @@ class TransactionModel extends Equatable {
     ),
     amount: amount,
     description: description,
-    date: DateTime.parse(date),
+    date: date,
     toAccountId: toAccountId,
     categoryId: categoryId,
     notes: notes,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+    createdAt: createdAt,
   );
 
   @override

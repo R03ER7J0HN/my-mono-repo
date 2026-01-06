@@ -13,12 +13,14 @@ InstallmentModel _$InstallmentModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       totalAmount: (json['total_amount'] as num).toDouble(),
       totalInstallments: (json['total_installments'] as num).toInt(),
-      startDate: json['start_date'] as String,
+      startDate: DateTime.parse(json['start_date'] as String),
       paidInstallments: (json['paid_installments'] as num?)?.toInt() ?? 0,
       frequency: json['frequency'] as String? ?? 'monthly',
       merchantName: json['merchant_name'] as String?,
       notes: json['notes'] as String?,
-      createdAt: json['created_at'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$InstallmentModelToJson(InstallmentModel instance) =>
@@ -30,8 +32,8 @@ Map<String, dynamic> _$InstallmentModelToJson(InstallmentModel instance) =>
       'total_installments': instance.totalInstallments,
       'paid_installments': instance.paidInstallments,
       'frequency': instance.frequency,
-      'start_date': instance.startDate,
+      'start_date': instance.startDate.toIso8601String(),
       'merchant_name': instance.merchantName,
       'notes': instance.notes,
-      'created_at': instance.createdAt,
+      'created_at': instance.createdAt?.toIso8601String(),
     };
