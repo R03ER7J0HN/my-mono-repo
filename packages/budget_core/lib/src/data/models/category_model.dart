@@ -1,6 +1,6 @@
-import 'package:budget_core/src/data/converters/json_converters.dart';
 import 'package:budget_core/src/domain/entities/category_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_core/flutter_core.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'category_model.g.dart';
@@ -25,7 +25,7 @@ class CategoryModel extends Equatable {
     iconCodePoint: entity.iconCodePoint,
     colorHex: entity.colorHex,
     isSystem: entity.isSystem,
-    createdAt: entity.createdAt?.toIso8601String(),
+    createdAt: entity.createdAt,
   );
 
   final String id;
@@ -37,15 +37,12 @@ class CategoryModel extends Equatable {
   @JsonKey(name: 'color_hex')
   final String colorHex;
 
-  @JsonKey(
-    name: 'is_system',
-    fromJson: JsonConverters.boolFromInt,
-    toJson: JsonConverters.boolToInt,
-  )
+  @BoolToIntConverter()
+  @JsonKey(name: 'is_system')
   final bool isSystem;
 
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$CategoryModelToJson(this);
 
@@ -55,7 +52,7 @@ class CategoryModel extends Equatable {
     iconCodePoint: iconCodePoint,
     colorHex: colorHex,
     isSystem: isSystem,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+    createdAt: createdAt,
   );
 
   @override

@@ -1,7 +1,7 @@
-import 'package:budget_core/src/data/converters/json_converters.dart';
 import 'package:budget_core/src/domain/entities/account_entity.dart';
 import 'package:budget_core/src/domain/enums/account_type.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_core/flutter_core.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'account_model.g.dart';
@@ -36,7 +36,7 @@ class AccountModel extends Equatable {
     iconName: entity.iconName,
     colorHex: entity.colorHex,
     isActive: entity.isActive,
-    createdAt: entity.createdAt?.toIso8601String(),
+    createdAt: entity.createdAt,
   );
 
   final String id;
@@ -59,15 +59,12 @@ class AccountModel extends Equatable {
   @JsonKey(name: 'color_hex')
   final String? colorHex;
 
-  @JsonKey(
-    name: 'is_active',
-    fromJson: JsonConverters.boolFromInt,
-    toJson: JsonConverters.boolToInt,
-  )
+  @BoolToIntConverter()
+  @JsonKey(name: 'is_active')
   final bool isActive;
 
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$AccountModelToJson(this);
 
@@ -85,7 +82,7 @@ class AccountModel extends Equatable {
     iconName: iconName,
     colorHex: colorHex,
     isActive: isActive,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+    createdAt: createdAt,
   );
 
   @override

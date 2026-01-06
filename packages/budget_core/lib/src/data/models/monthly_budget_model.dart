@@ -30,8 +30,8 @@ class MonthlyBudgetModel extends Equatable {
         spentAmount: entity.spentAmount,
         dailyBudget: entity.dailyBudget,
         notes: entity.notes,
-        createdAt: entity.createdAt?.toIso8601String(),
-        updatedAt: entity.updatedAt?.toIso8601String(),
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
       );
 
   final String id;
@@ -50,10 +50,10 @@ class MonthlyBudgetModel extends Equatable {
   final String? notes;
 
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   @JsonKey(name: 'updated_at')
-  final String? updatedAt;
+  final DateTime? updatedAt;
 
   Map<String, dynamic> toJson() => _$MonthlyBudgetModelToJson(this);
 
@@ -65,8 +65,8 @@ class MonthlyBudgetModel extends Equatable {
     spentAmount: spentAmount,
     dailyBudget: dailyBudget,
     notes: notes,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
-    updatedAt: updatedAt != null ? DateTime.parse(updatedAt!) : null,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
   );
 
   @override

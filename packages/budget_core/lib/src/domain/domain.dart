@@ -6,6 +6,7 @@ export 'entities/monthly_budget_entity.dart';
 export 'entities/transaction_entity.dart';
 export 'enums/enums.dart';
 export 'repositories/account_repository.dart';
+export 'repositories/app_data_repository.dart';
 export 'repositories/category_repository.dart';
 export 'repositories/installment_repository.dart';
 export 'repositories/monthly_budget_repository.dart';

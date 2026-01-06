@@ -33,10 +33,10 @@ class InstallmentModel extends Equatable {
         totalInstallments: entity.totalInstallments,
         paidInstallments: entity.paidInstallments,
         frequency: entity.frequency.name,
-        startDate: entity.startDate.toIso8601String(),
+        startDate: entity.startDate,
         merchantName: entity.merchantName,
         notes: entity.notes,
-        createdAt: entity.createdAt?.toIso8601String(),
+        createdAt: entity.createdAt,
       );
 
   final String id;
@@ -58,7 +58,7 @@ class InstallmentModel extends Equatable {
   final String frequency;
 
   @JsonKey(name: 'start_date')
-  final String startDate;
+  final DateTime startDate;
 
   @JsonKey(name: 'merchant_name')
   final String? merchantName;
@@ -66,7 +66,7 @@ class InstallmentModel extends Equatable {
   final String? notes;
 
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final DateTime? createdAt;
 
   Map<String, dynamic> toJson() => _$InstallmentModelToJson(this);
 
@@ -81,10 +81,10 @@ class InstallmentModel extends Equatable {
       (e) => e.name == frequency,
       orElse: () => InstallmentFrequency.monthly,
     ),
-    startDate: DateTime.parse(startDate),
+    startDate: startDate,
     merchantName: merchantName,
     notes: notes,
-    createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+    createdAt: createdAt,
   );
 
   @override
